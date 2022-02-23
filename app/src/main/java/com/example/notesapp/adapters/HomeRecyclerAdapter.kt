@@ -18,7 +18,7 @@ class HomeRecyclerAdapter : RecyclerView.Adapter<HomeRecyclerAdapter.ViewHolder>
     }
 
     override fun getItemCount(): Int {
-        return 20
+        return 200
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)

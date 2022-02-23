@@ -1,7 +1,7 @@
 package com.example.notesapp.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -16,7 +16,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
+        setToolbar()
         initRecyclerView()
+    }
+
+    private fun setToolbar() {
+        binding.homeToolbar.title = "Notes"
+        binding.homeToolbar.setNavigationIcon(R.drawable.ic_home_menu)
     }
 
     private fun initRecyclerView() {

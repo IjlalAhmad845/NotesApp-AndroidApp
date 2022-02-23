@@ -4,4 +4,8 @@
     //home activity
     <string name="home_text_notes">Notes</string>
     <string name="home_desc_fab">Add New Note</string>
+
+    //Note list item
+    <string name="placeholder_note_header">Header</string>
+    <string name="placeholder_note_body">Body</string>
 </resources>
