@@ -6,8 +6,12 @@ import androidx.lifecycle.ViewModel
 import com.example.notesapp.dataModels.Notes
 
 class HomeViewModel : ViewModel() {
-    private val _notesList=MutableLiveData<List<Notes>>()
+    private val _notesList = MutableLiveData<MutableList<Notes>>(mutableListOf())
 
-    val notesList:LiveData<List<Notes>>
-    get() = _notesList
+    init {
+        _notesList.value!!.add(Notes("hello", "world", false))
+    }
+
+    val notesList: LiveData<MutableList<Notes>>
+        get() = _notesList
 }
