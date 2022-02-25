@@ -8,4 +8,11 @@
     //Note list item
     <string name="placeholder_note_header">Header</string>
     <string name="placeholder_note_body">Body</string>
+
+    //add note activity
+    <string name="text_hint_title">Title</string>
+    <string name="text_hint_note">Note</string>
+    <string name="desc_back_button">Back Button</string>
+    <string name="desc_delete_button">Delete Button</string>
+    <string name="desc_archive_button">Archive Button</string>
 </resources>

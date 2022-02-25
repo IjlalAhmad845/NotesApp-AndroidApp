@@ -1,12 +1,12 @@
 package com.example.notesapp.activities
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.notesapp.R
 import com.example.notesapp.adapters.HomeRecyclerAdapter
 import com.example.notesapp.databinding.ActivityMainBinding
@@ -23,6 +23,10 @@ class MainActivity : AppCompatActivity() {
 
         setToolbar()
         initRecyclerView()
+
+        binding.homeFab.setOnClickListener {
+            addNote()
+        }
     }
 
     private fun setToolbar() {
@@ -31,12 +35,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initRecyclerView() {
-        binding.homeRv.layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
         val adapter = HomeRecyclerAdapter(homeViewModel.notesList.value!!)
         binding.homeRv.adapter = adapter
 
         homeViewModel.notesList.observe(this) {
             adapter.notifyDataSetChanged()
         }
+    }
+
+    private var addNoteCallback =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+        {
+            Toast.makeText(this,"back",Toast.LENGTH_SHORT).show()
+        }
+
+    private fun addNote() {
+        val intent = Intent(this,AddNoteActivity::class.java)
+        addNoteCallback.launch(intent)
     }
 }
