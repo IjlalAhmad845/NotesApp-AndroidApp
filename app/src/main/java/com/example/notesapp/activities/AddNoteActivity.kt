@@ -10,7 +10,8 @@ import com.example.notesapp.databinding.ActivityAddNoteBinding
 
 class AddNoteActivity : AppCompatActivity() {
     companion object{
-        var SEND_BACK_KEY="com.example.notesapp.activities.send_back"
+        var SEND_BACK_TITLE_KEY="com.example.notesapp.activities.title_key"
+        var SEND_BACK_BODY_KEY="com.example.notesapp.activities.body_key"
     }
     private lateinit var binding: ActivityAddNoteBinding
 
@@ -28,7 +29,8 @@ class AddNoteActivity : AppCompatActivity() {
         val body = binding.noteBodyTextView.text.toString()
 
         val data = Intent()
-        data.putExtra(SEND_BACK_KEY, title)
+        data.putExtra(SEND_BACK_TITLE_KEY, title)
+        data.putExtra(SEND_BACK_BODY_KEY,body)
 
 
         setResult(Activity.RESULT_OK, data)
