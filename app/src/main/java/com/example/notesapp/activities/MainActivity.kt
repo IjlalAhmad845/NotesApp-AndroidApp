@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
         binding.homeRv.adapter = adapter
     }
 
-    /**==================================== CALLBACK FOR RECEIVING NOTE ADD ACTIVITY RESULT ====================================**/
+    /**========================================== CALLBACK FOR RECEIVING NEW NOTE =================================================**/
     private var addNoteCallback =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it?.resultCode == Activity.RESULT_OK) {
@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
             }
         }
 
+    /**================================================ CALLBACK FOR RECEIVING EDITED NOTE  =======================================**/
     private var editNoteCallback =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it?.resultCode == Activity.RESULT_OK) {

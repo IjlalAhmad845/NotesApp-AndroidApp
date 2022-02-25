@@ -30,6 +30,7 @@ class AddNoteActivity : AppCompatActivity() {
         }
     }
 
+    /**============================================ METHOD FOR GETTING  FROM INTENT ===========================================**/
     private fun getNote() {
 
         //for new note this intent will be empty
@@ -38,6 +39,7 @@ class AddNoteActivity : AppCompatActivity() {
         val noteBody = data.getStringExtra(HomeViewModel.NOTE_BODY_KEY)
         val position = data.getIntExtra(HomeViewModel.NOTE_INDEX_KEY, -1)
 
+        //and text will be empty for empty intent
         binding.noteHeaderTextView.setText(noteTitle)
         binding.noteBodyTextView.setText(noteBody)
 
