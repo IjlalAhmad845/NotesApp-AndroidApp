@@ -1,5 +1,6 @@
 package com.example.notesapp.activities
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -46,11 +47,15 @@ class MainActivity : AppCompatActivity() {
     private var addNoteCallback =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult())
         {
-            Toast.makeText(this,"back",Toast.LENGTH_SHORT).show()
+            if (it?.resultCode == Activity.RESULT_OK) {
+                val noteTitle = it.data?.getStringExtra(AddNoteActivity.SEND_BACK_KEY)
+                Toast.makeText(this, noteTitle, Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
 
     private fun addNote() {
-        val intent = Intent(this,AddNoteActivity::class.java)
+        val intent = Intent(this, AddNoteActivity::class.java)
         addNoteCallback.launch(intent)
     }
 }

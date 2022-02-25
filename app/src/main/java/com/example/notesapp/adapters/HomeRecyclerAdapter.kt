@@ -1,7 +1,5 @@
 package com.example.notesapp.adapters
 
-import android.content.res.Resources
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,8 +29,8 @@ class HomeRecyclerAdapter(private var notesList: MutableList<Notes>) :
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var noteCard = itemView.findViewById<ConstraintLayout>(R.id.note_card)
-        private var noteHeader = itemView.findViewById<TextView>(R.id.note_header_text_view)
-        private var noteBody = itemView.findViewById<TextView>(R.id.note_body_text_view)
+        private var noteHeader = itemView.findViewById<TextView>(R.id.item_note_header_text_view)
+        private var noteBody = itemView.findViewById<TextView>(R.id.item_note_body_text_view)
         private var noteSelected = itemView.findViewById<ImageView>(R.id.note_selected_icon)
 
         fun bind(holder: ViewHolder, note: Notes) {
