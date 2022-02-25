@@ -3,7 +3,6 @@ package com.example.notesapp.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.notesapp.adapters.HomeRecyclerAdapter
 import com.example.notesapp.dataModels.Notes
 
 class HomeViewModel : ViewModel() {
@@ -14,6 +13,9 @@ class HomeViewModel : ViewModel() {
     }
 
     private val _notesList = MutableLiveData<MutableList<Notes>>(mutableListOf())
+
+    var selectionMode = false;
+    var selectedItems: MutableList<Notes> = mutableListOf()
 
     val notesList: LiveData<MutableList<Notes>>
         get() = _notesList
@@ -26,5 +28,9 @@ class HomeViewModel : ViewModel() {
     /**====================================== FUNCTION FOR UPDATING NOTES TO NOTES LIST ======================================**/
     fun editNote(note: Notes, index: Int) {
         _notesList.value?.set(index, note)
+    }
+
+    fun setSelected(index: Int, isSelected: Boolean) {
+        _notesList.value!![index].isSelected = isSelected
     }
 }

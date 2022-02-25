@@ -1,6 +1,5 @@
 package com.example.notesapp.adapters
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,11 +15,6 @@ class HomeRecyclerAdapter(
     private var cardOnClickInterface: CardOnClickInterface
 ) :
     RecyclerView.Adapter<HomeRecyclerAdapter.ViewHolder>() {
-
-    companion object {
-        var selectionMode = false;
-        var selectedItems: MutableList<Notes> = mutableListOf()
-    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -39,6 +33,7 @@ class HomeRecyclerAdapter(
 
     interface CardOnClickInterface {
         fun cardOnClick(position: Int)
+        fun cardLongClick(position: Int)
     }
 
 
@@ -50,28 +45,11 @@ class HomeRecyclerAdapter(
         private var noteSelected = itemView.findViewById<ImageView>(R.id.note_selected_icon)!!
 
         init {
-            noteCard.setOnClickListener {
-                if (selectionMode) {
-                    if (selectedItems.contains(notesList[adapterPosition])) {
-                        noteSelected.visibility = View.GONE
-                        noteCard.setBackgroundResource(android.R.color.transparent)
-                        selectedItems.remove(notesList[adapterPosition])
-                    } else {
-                        noteSelected.visibility = View.VISIBLE
-
-                        noteCard.setBackgroundResource(R.drawable.note_selected_boundary)
-                        selectedItems.add(notesList[adapterPosition])
-                    }
-
-                    if (selectedItems.size == 0)
-                        selectionMode = false
-
-                } else
-                    cardOnClickInterface.cardOnClick(adapterPosition)
-            }
+            handleOnClick()
             handleLongClick()
         }
 
+        /**================================================ METHOD FOR BINDING VIEWS ===================================================**/
         fun bind(holder: ViewHolder, note: Notes) {
 
             holder.noteHeader.text = note.head
@@ -84,25 +62,26 @@ class HomeRecyclerAdapter(
                     holder.noteCard.setBackgroundResource(android.R.color.transparent)
                     View.GONE
                 }
+
+            if (note.isSelected)
+                holder.noteCard.setBackgroundResource(R.drawable.note_selected_boundary)
+            else
+                noteCard.setBackgroundResource(android.R.color.transparent)
+
         }
 
+
+        /**============================================================== ON CLICK =========================================================**/
+        private fun handleOnClick() {
+            noteCard.setOnClickListener {
+                cardOnClickInterface.cardOnClick(adapterPosition)
+            }
+        }
+
+        /**=========================================================== LONG CLICK =========================================================**/
         private fun handleLongClick() {
             noteCard.setOnLongClickListener {
-                selectionMode = true
-                if (selectedItems.contains(notesList[adapterPosition])) {
-                    noteSelected.visibility = View.GONE
-                    noteCard.setBackgroundResource(android.R.color.transparent)
-                    selectedItems.remove(notesList[adapterPosition])
-                } else {
-                    noteSelected.visibility = View.VISIBLE
-
-                    noteCard.setBackgroundResource(R.drawable.note_selected_boundary)
-                    selectedItems.add(notesList[adapterPosition])
-                }
-
-                if (selectedItems.size == 0)
-                    selectionMode = false
-
+                cardOnClickInterface.cardLongClick(adapterPosition)
                 true
             }
         }

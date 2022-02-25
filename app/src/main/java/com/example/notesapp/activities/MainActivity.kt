@@ -3,6 +3,9 @@ package com.example.notesapp.activities
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.ActionMode
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -55,6 +58,24 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
             }
         }
 
+    inner class ActionModeCallback : ActionMode.Callback {
+        override fun onCreateActionMode(p0: ActionMode?, p1: Menu?): Boolean {
+            return true
+        }
+
+        override fun onPrepareActionMode(p0: ActionMode?, p1: Menu?): Boolean {
+            return true
+        }
+
+        override fun onActionItemClicked(p0: ActionMode?, p1: MenuItem?): Boolean {
+            return true
+        }
+
+        override fun onDestroyActionMode(p0: ActionMode?) {
+
+        }
+    }
+
     /**================================================ CALLBACK FOR RECEIVING EDITED NOTE  =======================================**/
     private var editNoteCallback =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -70,26 +91,61 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
             }
         }
 
-    /**================================== METHOD FOR STARTING ADD NOTE ACTIVITY =====================================**/
+    /**======================================= METHOD FOR STARTING ADD NOTE ACTIVITY =============================================**/
     private fun startAddNoteActivity() {
         val intent = Intent(this, AddNoteActivity::class.java)
         addNoteCallback.launch(intent)
     }
 
+    /**===================================================== CARD ON CLICK =============================================================**/
     override fun cardOnClick(position: Int) {
-        val intent = Intent(this, AddNoteActivity::class.java)
+        if (homeViewModel.selectionMode) {
+            if (homeViewModel.selectedItems.contains(homeViewModel.notesList.value!![position])) {
+                homeViewModel.setSelected(position, false)
+                homeViewModel.selectedItems.remove(homeViewModel.notesList.value!![position])
+            } else {
+                homeViewModel.setSelected(position, true)
+                homeViewModel.selectedItems.add(homeViewModel.notesList.value!![position])
+            }
 
-        intent.putExtra(
-            HomeViewModel.NOTE_TITLE_KEY,
-            homeViewModel.notesList.value?.get(position)?.head
-        )
+            if (homeViewModel.selectedItems.size == 0)
+                homeViewModel.selectionMode = false
 
-        intent.putExtra(
-            HomeViewModel.NOTE_BODY_KEY,
-            homeViewModel.notesList.value?.get(position)?.body
-        )
+            adapter.notifyItemChanged(position)
+        } else {
+            val intent = Intent(this, AddNoteActivity::class.java)
 
-        intent.putExtra(HomeViewModel.NOTE_INDEX_KEY, position)
-        editNoteCallback.launch(intent)
+            intent.putExtra(
+                HomeViewModel.NOTE_TITLE_KEY,
+                homeViewModel.notesList.value?.get(position)?.head
+            )
+
+            intent.putExtra(
+                HomeViewModel.NOTE_BODY_KEY,
+                homeViewModel.notesList.value?.get(position)?.body
+            )
+
+            intent.putExtra(HomeViewModel.NOTE_INDEX_KEY, position)
+            editNoteCallback.launch(intent)
+        }
+    }
+
+    /**===================================================== CARD LONG CLICK =============================================================**/
+    override fun cardLongClick(position: Int) {
+        homeViewModel.selectionMode = true
+        if (homeViewModel.selectedItems.contains(homeViewModel.notesList.value!![position])) {
+            homeViewModel.setSelected(position, false)
+            homeViewModel.selectedItems.remove(homeViewModel.notesList.value!![position])
+        } else {
+            homeViewModel.setSelected(position, true)
+            homeViewModel.selectedItems.add(homeViewModel.notesList.value!![position])
+        }
+
+        if (homeViewModel.selectedItems.size == 0)
+            homeViewModel.selectionMode = false
+
+        adapter.notifyItemChanged(position)
+
+        binding.homeToolbar.startActionMode(ActionModeCallback())
     }
 }
