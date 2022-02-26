@@ -95,6 +95,25 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
         }
 
         override fun onActionItemClicked(p0: ActionMode?, p1: MenuItem?): Boolean {
+            var deleteNoteIndex: Int
+            when (p1!!.itemId) {
+                R.id.contextual_delete -> {
+
+                    //removing only selected items one by one
+                    for (item in homeViewModel.selectedItems) {
+                        deleteNoteIndex = homeViewModel.notesList.value!!.indexOf(item)
+                        homeViewModel.deleteNote(deleteNoteIndex)
+                        adapter.notifyItemRemoved(deleteNoteIndex)
+                    }
+
+                    //since all the selected items was removed above
+                    homeViewModel.selectedItems.clear()
+                }
+            }
+
+            //after contextual click, action mode should be finished
+            actionMode!!.finish()
+
             return true
         }
 

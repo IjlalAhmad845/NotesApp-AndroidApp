@@ -30,6 +30,10 @@ class HomeViewModel : ViewModel() {
         _notesList.value?.set(index, note)
     }
 
+    fun deleteNote(index: Int) {
+        _notesList.value?.removeAt(index)
+    }
+
     fun setSelected(index: Int, isSelected: Boolean) {
         _notesList.value!![index].isSelected = isSelected
     }
