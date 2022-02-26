@@ -53,14 +53,40 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
                 val noteBody = it.data?.getStringExtra(AddNoteActivity.SEND_BACK_BODY_KEY)
 
                 if (!noteTitle.isNullOrEmpty() || !noteBody.isNullOrEmpty()) {
-                    homeViewModel.addNote(Notes(noteTitle!!, noteBody!!, false))
+                    homeViewModel.addNote(Notes(noteTitle!!.trim(), noteBody!!.trim(), false))
                     adapter.notifyItemInserted(homeViewModel.notesList.value!!.size)
                 }
             }
         }
 
+    /**================================================ CALLBACK FOR RECEIVING EDITED NOTE  =======================================**/
+    private var editNoteCallback =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it?.resultCode == Activity.RESULT_OK) {
+                val noteTitle = it.data?.getStringExtra(AddNoteActivity.SEND_BACK_TITLE_KEY)
+                val noteBody = it.data?.getStringExtra(AddNoteActivity.SEND_BACK_BODY_KEY)
+                val noteIndex = it.data?.getIntExtra(AddNoteActivity.SEND_BACK_INDEX_KEY, -1)!!
+
+                if (!noteTitle.isNullOrEmpty() || !noteBody.isNullOrEmpty()) {
+                    homeViewModel.editNote(
+                        Notes(noteTitle!!.trim(), noteBody!!.trim(), false),
+                        noteIndex
+                    )
+                    adapter.notifyItemChanged(noteIndex)
+                }
+            }
+        }
+
+    /**======================================= METHOD FOR STARTING ADD NOTE ACTIVITY =============================================**/
+    private fun startAddNoteActivity() {
+        val intent = Intent(this, AddNoteActivity::class.java)
+        addNoteCallback.launch(intent)
+    }
+
+    /**=================================================== CALLBACK FOR CONTEXTUAL MENU =============================================**/
     inner class ActionModeCallback : ActionMode.Callback {
         override fun onCreateActionMode(p0: ActionMode?, p1: Menu?): Boolean {
+            p0!!.menuInflater.inflate(R.menu.contextual_menu, p1)
             return true
         }
 
@@ -76,55 +102,30 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
 
             for (item in homeViewModel.selectedItems) {
                 item.isSelected = false
+
+                //notifying adapter for only those items which have changed
+                //by finding their index
+                adapter.notifyItemChanged(homeViewModel.notesList.value!!.indexOf(item))
             }
+
+            //resetting selection list
             homeViewModel.selectedItems.clear()
             homeViewModel.selectionMode = false
-            adapter.notifyDataSetChanged()
 
             actionMode = null
         }
     }
 
-    /**================================================ CALLBACK FOR RECEIVING EDITED NOTE  =======================================**/
-    private var editNoteCallback =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it?.resultCode == Activity.RESULT_OK) {
-                val noteTitle = it.data?.getStringExtra(AddNoteActivity.SEND_BACK_TITLE_KEY)
-                val noteBody = it.data?.getStringExtra(AddNoteActivity.SEND_BACK_BODY_KEY)
-                val noteIndex = it.data?.getIntExtra(AddNoteActivity.SEND_BACK_INDEX_KEY, -1)!!
-
-                if (!noteTitle.isNullOrEmpty() || !noteBody.isNullOrEmpty()) {
-                    homeViewModel.editNote(Notes(noteTitle!!, noteBody!!, false), noteIndex)
-                    adapter.notifyItemChanged(noteIndex)
-                }
-            }
-        }
-
-    /**======================================= METHOD FOR STARTING ADD NOTE ACTIVITY =============================================**/
-    private fun startAddNoteActivity() {
-        val intent = Intent(this, AddNoteActivity::class.java)
-        addNoteCallback.launch(intent)
-    }
 
     /**===================================================== CARD ON CLICK =============================================================**/
     override fun cardOnClick(position: Int) {
 
+        //card selection mode
         if (homeViewModel.selectionMode) {
-            if (homeViewModel.selectedItems.contains(homeViewModel.notesList.value!![position])) {
-                homeViewModel.setSelected(position, false)
-                homeViewModel.selectedItems.remove(homeViewModel.notesList.value!![position])
-            } else {
-                homeViewModel.setSelected(position, true)
-                homeViewModel.selectedItems.add(homeViewModel.notesList.value!![position])
-            }
-
-            if (homeViewModel.selectedItems.size == 0) {
-                actionMode!!.finish()
-                homeViewModel.selectionMode = false
-            }
-
-            adapter.notifyItemChanged(position)
-        } else {
+            contextualMenuControl(position)
+        }
+        //open note
+        else {
             val intent = Intent(this, AddNoteActivity::class.java)
 
             intent.putExtra(
@@ -145,10 +146,16 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
     /**===================================================== CARD LONG CLICK =============================================================**/
     override fun cardLongClick(position: Int) {
 
+        //contextual menu opens by singleton pattern
         if (actionMode == null)
             actionMode = startActionMode(ActionModeCallback())!!
 
         homeViewModel.selectionMode = true
+        contextualMenuControl(position)
+    }
+
+    /**================================== METHOD SELECTION CONTROL ON CONTEXTUAL MENU ===========================================**/
+    private fun contextualMenuControl(position: Int) {
         if (homeViewModel.selectedItems.contains(homeViewModel.notesList.value!![position])) {
             homeViewModel.setSelected(position, false)
             homeViewModel.selectedItems.remove(homeViewModel.notesList.value!![position])
@@ -163,5 +170,8 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
         }
 
         adapter.notifyItemChanged(position)
+
+        if (actionMode != null)
+            actionMode!!.title = homeViewModel.selectedItems.size.toString()
     }
 }
