@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -18,7 +16,6 @@ import com.example.notesapp.adapters.HomeRecyclerAdapter
 import com.example.notesapp.dataModels.Notes
 import com.example.notesapp.databinding.ActivityMainBinding
 import com.example.notesapp.viewModels.HomeViewModel
-import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 
 
@@ -51,8 +48,15 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
             homeViewModel.actionMode!!.title = homeViewModel.selectedItems.size.toString()
         }
 
+        //SETTING NAVIGATION MENU
         val mToggle =
-            ActionBarDrawerToggle(this, binding.homeDrawer, binding.homeToolbar, R.string.open, R.string.close)
+            ActionBarDrawerToggle(
+                this,
+                binding.homeDrawer,
+                binding.homeToolbar,
+                R.string.open,
+                R.string.close
+            )
         binding.homeDrawer.addDrawerListener(mToggle)
 
         mToggle.syncState()
@@ -113,8 +117,16 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
 
         override fun onActionItemClicked(p0: ActionMode?, p1: MenuItem?): Boolean {
             var deleteNoteIndex: Int
+            val deletedNoteIndexList: MutableList<Int> = mutableListOf()
+
             when (p1!!.itemId) {
                 R.id.contextual_delete -> {
+
+                    //filling index list first, cause notes list size will vary when deleting notes
+                    for (item in homeViewModel.selectedItems) {
+                        deleteNoteIndex = homeViewModel.notesList.value!!.indexOf(item)
+                        deletedNoteIndexList.add(deleteNoteIndex)
+                    }
 
                     //removing only selected items one by one
                     for (item in homeViewModel.selectedItems) {
@@ -123,7 +135,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
                         adapter.notifyItemRemoved(deleteNoteIndex)
                     }
 
-                    deleteSnackBar()
+                    deleteSnackBar(deletedNoteIndexList, homeViewModel.selectedItems)
                     homeViewModel.selectedItems.clear()
                 }
             }
@@ -209,21 +221,35 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
             homeViewModel.actionMode!!.title = homeViewModel.selectedItems.size.toString()
     }
 
-    private fun deleteSnackBar() {
+    private fun deleteSnackBar(
+        indexList: MutableList<Int>,
+        NotesList: MutableList<Notes>
+    ) {
 
-        val snackBar = Snackbar.make(binding.homeRootLayout, "Notes Deleted", Snackbar.LENGTH_LONG)
+        val deletedNotesList = NotesList.toMutableList()
 
-        var deletedNotes: MutableList<Notes> = mutableListOf()
+        var snackBarMsg = if (deletedNotesList.size > 1) "Notes Deleted" else "Note Deleted"
+        val snackBar = Snackbar.make(binding.homeRootLayout, snackBarMsg, Snackbar.LENGTH_LONG)
 
+        //DISMISS LISTENER
         snackBar.addCallback(object : Snackbar.Callback() {
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                 super.onDismissed(transientBottomBar, event)
-                Toast.makeText(this@MainActivity,"Deleted",Toast.LENGTH_SHORT).show()
+                indexList.clear()
+                deletedNotesList.clear()
             }
         })
 
+        //SNACK BAR UNDO BUTTON
         snackBar.setAction("UNDO") {
+            for (i in 0 until deletedNotesList.size) {
+                deletedNotesList[i].isSelected = false
+                homeViewModel.addNoteAt(indexList[i], deletedNotesList[i])
+                adapter.notifyItemInserted(indexList[i])
+            }
 
+            snackBarMsg = if (deletedNotesList.size > 1) "Notes Recovered" else "Note Recovered"
+            Snackbar.make(binding.homeRootLayout, snackBarMsg, Snackbar.LENGTH_SHORT).show()
         }
         snackBar.show()
     }

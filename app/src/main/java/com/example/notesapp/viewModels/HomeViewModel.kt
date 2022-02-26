@@ -28,6 +28,10 @@ class HomeViewModel : ViewModel() {
         _notesList.value?.add(note)
     }
 
+    fun addNoteAt(index: Int, note: Notes) {
+        _notesList.value?.add(index,note)
+    }
+
     /**====================================== FUNCTION FOR UPDATING NOTES TO NOTES LIST ======================================**/
     fun editNote(note: Notes, index: Int) {
         _notesList.value?.set(index, note)
