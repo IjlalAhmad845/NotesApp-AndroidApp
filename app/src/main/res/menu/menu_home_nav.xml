@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_notes"
+        android:icon="@drawable/ic_nav_notes"
+        android:title="@string/text_nav_notes" />
+    <item
+        android:id="@+id/action_archives"
+        android:icon="@drawable/ic_archive_note"
+        android:title="@string/text_nav_archives" />
+    <item
+        android:id="@+id/action_theme"
+        android:icon="@drawable/ic_nav_theme"
+        android:title="@string/text_nav_dark_theme" />
+
+</menu>

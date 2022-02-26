@@ -6,17 +6,21 @@ import android.os.Bundle
 import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import com.example.notesapp.R
 import com.example.notesapp.adapters.HomeRecyclerAdapter
 import com.example.notesapp.dataModels.Notes
 import com.example.notesapp.databinding.ActivityMainBinding
 import com.example.notesapp.viewModels.HomeViewModel
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
+
 
 class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterface {
 
@@ -47,8 +51,12 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
             homeViewModel.actionMode!!.title = homeViewModel.selectedItems.size.toString()
         }
 
+        val mToggle =
+            ActionBarDrawerToggle(this, binding.homeDrawer, binding.homeToolbar, R.string.open, R.string.close)
+        binding.homeDrawer.addDrawerListener(mToggle)
+
+        mToggle.syncState()
         binding.homeToolbar.title = "Notes"
-        binding.homeToolbar.setNavigationIcon(R.drawable.ic_home_menu)
 
         adapter = HomeRecyclerAdapter(homeViewModel.notesList.value!!, this)
         binding.homeRv.adapter = adapter
@@ -95,7 +103,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
     /**=================================================== CALLBACK FOR CONTEXTUAL MENU =============================================**/
     inner class ActionModeCallback : ActionMode.Callback {
         override fun onCreateActionMode(p0: ActionMode?, p1: Menu?): Boolean {
-            p0!!.menuInflater.inflate(R.menu.contextual_menu, p1)
+            p0!!.menuInflater.inflate(R.menu.menu_contextual, p1)
             return true
         }
 
@@ -116,15 +124,11 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
                     }
 
                     deleteSnackBar()
-
-                    //since all the selected items was removed above
                     homeViewModel.selectedItems.clear()
                 }
             }
 
-            //after contextual click, action mode should be finished
             homeViewModel.actionMode!!.finish()
-
             return true
         }
 
@@ -210,6 +214,13 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
         val snackBar = Snackbar.make(binding.homeRootLayout, "Notes Deleted", Snackbar.LENGTH_LONG)
 
         var deletedNotes: MutableList<Notes> = mutableListOf()
+
+        snackBar.addCallback(object : Snackbar.Callback() {
+            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                super.onDismissed(transientBottomBar, event)
+                Toast.makeText(this@MainActivity,"Deleted",Toast.LENGTH_SHORT).show()
+            }
+        })
 
         snackBar.setAction("UNDO") {
 
