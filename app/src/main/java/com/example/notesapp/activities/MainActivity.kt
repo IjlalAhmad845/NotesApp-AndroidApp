@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
     private lateinit var binding: ActivityMainBinding
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var adapter: HomeRecyclerAdapter
+    private var actionMode: ActionMode? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,6 +74,14 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
 
         override fun onDestroyActionMode(p0: ActionMode?) {
 
+            for (item in homeViewModel.selectedItems) {
+                item.isSelected = false
+            }
+            homeViewModel.selectedItems.clear()
+            homeViewModel.selectionMode = false
+            adapter.notifyDataSetChanged()
+
+            actionMode = null
         }
     }
 
@@ -99,6 +108,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
 
     /**===================================================== CARD ON CLICK =============================================================**/
     override fun cardOnClick(position: Int) {
+
         if (homeViewModel.selectionMode) {
             if (homeViewModel.selectedItems.contains(homeViewModel.notesList.value!![position])) {
                 homeViewModel.setSelected(position, false)
@@ -108,8 +118,10 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
                 homeViewModel.selectedItems.add(homeViewModel.notesList.value!![position])
             }
 
-            if (homeViewModel.selectedItems.size == 0)
+            if (homeViewModel.selectedItems.size == 0) {
+                actionMode!!.finish()
                 homeViewModel.selectionMode = false
+            }
 
             adapter.notifyItemChanged(position)
         } else {
@@ -132,6 +144,10 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
 
     /**===================================================== CARD LONG CLICK =============================================================**/
     override fun cardLongClick(position: Int) {
+
+        if (actionMode == null)
+            actionMode = startActionMode(ActionModeCallback())!!
+
         homeViewModel.selectionMode = true
         if (homeViewModel.selectedItems.contains(homeViewModel.notesList.value!![position])) {
             homeViewModel.setSelected(position, false)
@@ -141,11 +157,11 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
             homeViewModel.selectedItems.add(homeViewModel.notesList.value!![position])
         }
 
-        if (homeViewModel.selectedItems.size == 0)
+        if (homeViewModel.selectedItems.size == 0) {
             homeViewModel.selectionMode = false
+            actionMode!!.finish()
+        }
 
         adapter.notifyItemChanged(position)
-
-        binding.homeToolbar.startActionMode(ActionModeCallback())
     }
 }
