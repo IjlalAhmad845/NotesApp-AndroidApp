@@ -221,35 +221,52 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
             homeViewModel.actionMode!!.title = homeViewModel.selectedItems.size.toString()
     }
 
+    /**========================================= METHOD FOR HANDLING DELETING SNACK BAR ==============================================**/
     private fun deleteSnackBar(
         indexList: MutableList<Int>,
         NotesList: MutableList<Notes>
     ) {
 
-        val deletedNotesList = NotesList.toMutableList()
+        //mapping indexes to notes list
+        var notesMapList = mutableMapOf<Int, Notes>()
+        for (i in 0 until indexList.size)
+            notesMapList[indexList[i]] = NotesList[i]
 
-        var snackBarMsg = if (deletedNotesList.size > 1) "Notes Deleted" else "Note Deleted"
-        val snackBar = Snackbar.make(binding.homeRootLayout, snackBarMsg, Snackbar.LENGTH_LONG)
+        //sorting indexes for removing selection order
+        indexList.sort()
+        notesMapList = notesMapList.toSortedMap()
+
+        //making snack bar
+        val snackBar = Snackbar.make(
+            binding.homeRootLayout,
+            if (notesMapList.size > 1) "Notes Deleted" else "Note Deleted",
+            Snackbar.LENGTH_LONG
+        )
 
         //DISMISS LISTENER
         snackBar.addCallback(object : Snackbar.Callback() {
             override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
                 super.onDismissed(transientBottomBar, event)
                 indexList.clear()
-                deletedNotesList.clear()
+                notesMapList.clear()
             }
         })
 
         //SNACK BAR UNDO BUTTON
         snackBar.setAction("UNDO") {
-            for (i in 0 until deletedNotesList.size) {
-                deletedNotesList[i].isSelected = false
-                homeViewModel.addNoteAt(indexList[i], deletedNotesList[i])
-                adapter.notifyItemInserted(indexList[i])
+            println(notesMapList)
+
+            for (i in indexList) {
+                notesMapList[i]!!.isSelected = false
+                homeViewModel.addNoteAt(i, notesMapList[i]!!)
+                adapter.notifyItemInserted(i)
             }
 
-            snackBarMsg = if (deletedNotesList.size > 1) "Notes Recovered" else "Note Recovered"
-            Snackbar.make(binding.homeRootLayout, snackBarMsg, Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(
+                binding.homeRootLayout,
+                if (notesMapList.size > 1) "Notes Recovered" else "Note Recovered",
+                Snackbar.LENGTH_SHORT
+            ).show()
         }
         snackBar.show()
     }
