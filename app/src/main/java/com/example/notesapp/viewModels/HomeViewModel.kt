@@ -1,5 +1,6 @@
 package com.example.notesapp.viewModels
 
+import android.view.ActionMode
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,12 +14,14 @@ class HomeViewModel : ViewModel() {
     }
 
     private val _notesList = MutableLiveData<MutableList<Notes>>(mutableListOf())
+    val notesList: LiveData<MutableList<Notes>>
+        get() = _notesList
 
+
+    var actionMode: ActionMode? = null
     var selectionMode = false;
     var selectedItems: MutableList<Notes> = mutableListOf()
 
-    val notesList: LiveData<MutableList<Notes>>
-        get() = _notesList
 
     /**====================================== FUNCTION FOR ADDING NOTES TO NOTES LIST ========================================**/
     fun addNote(note: Notes) {
@@ -30,10 +33,12 @@ class HomeViewModel : ViewModel() {
         _notesList.value?.set(index, note)
     }
 
+    /**====================================== FUNCTION FOR DELETING NOTES FROM NOTES LIST ====================================**/
     fun deleteNote(index: Int) {
         _notesList.value?.removeAt(index)
     }
 
+    /**==================================== FUNCTION FOR TOGGLING  SELECTION IN NOTES LIST ====================================**/
     fun setSelected(index: Int, isSelected: Boolean) {
         _notesList.value!![index].isSelected = isSelected
     }
