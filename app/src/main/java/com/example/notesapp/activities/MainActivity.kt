@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
         mToggle.syncState()
         binding.homeToolbar.title = "Notes"
 
-        adapter = HomeRecyclerAdapter(homeViewModel.notesList.value!!, this)
+        adapter = HomeRecyclerAdapter(homeViewModel.notesList, this)
         binding.homeRv.adapter = adapter
     }
 
@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
 
                 if (!noteTitle.isNullOrEmpty() || !noteBody.isNullOrEmpty()) {
                     homeViewModel.addNote(Notes(noteTitle!!.trim(), noteBody!!.trim(), false))
-                    adapter.notifyItemInserted(homeViewModel.notesList.value!!.size)
+                    adapter.notifyItemInserted(homeViewModel.notesList.size)
                 }
             }
         }
@@ -124,13 +124,13 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
 
                     //filling index list first, cause notes list size will vary when deleting notes
                     for (item in homeViewModel.selectedItems) {
-                        deleteNoteIndex = homeViewModel.notesList.value!!.indexOf(item)
+                        deleteNoteIndex = homeViewModel.notesList.indexOf(item)
                         deletedNoteIndexList.add(deleteNoteIndex)
                     }
 
                     //removing only selected items one by one
                     for (item in homeViewModel.selectedItems) {
-                        deleteNoteIndex = homeViewModel.notesList.value!!.indexOf(item)
+                        deleteNoteIndex = homeViewModel.notesList.indexOf(item)
                         homeViewModel.deleteNote(deleteNoteIndex)
                         adapter.notifyItemRemoved(deleteNoteIndex)
                     }
@@ -151,7 +151,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
 
                 //notifying adapter for only those items which have changed
                 //by finding their index
-                adapter.notifyItemChanged(homeViewModel.notesList.value!!.indexOf(item))
+                adapter.notifyItemChanged(homeViewModel.notesList.indexOf(item))
             }
 
             //resetting selection list
@@ -176,12 +176,12 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
 
             intent.putExtra(
                 HomeViewModel.NOTE_TITLE_KEY,
-                homeViewModel.notesList.value?.get(position)?.head
+                homeViewModel.notesList[position].head
             )
 
             intent.putExtra(
                 HomeViewModel.NOTE_BODY_KEY,
-                homeViewModel.notesList.value?.get(position)?.body
+                homeViewModel.notesList[position].body
             )
 
             intent.putExtra(HomeViewModel.NOTE_INDEX_KEY, position)
@@ -202,12 +202,12 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
 
     /**================================== METHOD SELECTION CONTROL ON CONTEXTUAL MENU ===========================================**/
     private fun contextualMenuControl(position: Int) {
-        if (homeViewModel.selectedItems.contains(homeViewModel.notesList.value!![position])) {
+        if (homeViewModel.selectedItems.contains(homeViewModel.notesList[position])) {
             homeViewModel.setSelected(position, false)
-            homeViewModel.selectedItems.remove(homeViewModel.notesList.value!![position])
+            homeViewModel.selectedItems.remove(homeViewModel.notesList[position])
         } else {
             homeViewModel.setSelected(position, true)
-            homeViewModel.selectedItems.add(homeViewModel.notesList.value!![position])
+            homeViewModel.selectedItems.add(homeViewModel.notesList[position])
         }
 
         if (homeViewModel.selectedItems.size == 0) {
