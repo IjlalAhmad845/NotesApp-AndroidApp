@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Projects/Android Studio Projects/Practice/NotesApp/app/src/main/res/drawable/ic_archive_note.xml" value="0.2495" />
         <entry key="..\:/Projects/Android Studio Projects/Practice/NotesApp/app/src/main/res/drawable/ic_home_menu.xml" value="0.2555" />
         <entry key="..\:/Projects/Android Studio Projects/Practice/NotesApp/app/src/main/res/drawable/note_selected_boundary.xml" value="0.2555" />
         <entry key="..\:/Projects/Android Studio Projects/Practice/NotesApp/app/src/main/res/layout/activity_add_note.xml" value="0.25" />

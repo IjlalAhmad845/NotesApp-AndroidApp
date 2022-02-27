@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -52,21 +51,10 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
             homeViewModel.actionMode!!.title = homeViewModel.selectedItems.size.toString()
         }
 
-        //SETTING NAVIGATION MENU
-        val mToggle =
-            ActionBarDrawerToggle(
-                this,
-                binding.homeDrawer,
-                binding.homeToolbar,
-                R.string.open,
-                R.string.close
-            )
-        binding.homeDrawer.addDrawerListener(mToggle)
-        binding.homeNavigationView.setNavigationItemSelectedListener(NavigationMenuController.mOnNavigationItemSelectedListener)
+        //INITIALIZING NAVIGATION MENU
+        NavigationMenuController.initNavigationMenu(this, binding)
 
-        mToggle.syncState()
-        binding.homeToolbar.title = "Notes"
-
+        //INITIALIZING RECYCLER VIEW
         adapter = HomeRecyclerAdapter(homeViewModel.displayNotesList, this)
         binding.homeRv.adapter = adapter
     }

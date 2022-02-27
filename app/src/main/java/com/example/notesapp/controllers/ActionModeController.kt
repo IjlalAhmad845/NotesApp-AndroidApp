@@ -27,53 +27,62 @@ class ActionModeController(
         }
 
         override fun onActionItemClicked(p0: ActionMode?, p1: MenuItem?): Boolean {
-            var deleteNoteIndex: Int
-            val deletedNoteIndexList: MutableList<Int> = mutableListOf()
-
-            when (p1!!.itemId) {
-                R.id.contextual_delete -> {
-
-                    //filling index list first, cause notes list size will vary when deleting notes
-                    for (item in homeViewModel.selectedItems) {
-                        deleteNoteIndex = homeViewModel.displayNotesList.indexOf(item)
-                        deletedNoteIndexList.add(deleteNoteIndex)
-                    }
-
-                    //removing only selected items one by one
-                    for (item in homeViewModel.selectedItems) {
-                        deleteNoteIndex = homeViewModel.displayNotesList.indexOf(item)
-                        homeViewModel.deleteNote(deleteNoteIndex)
-                        adapter.notifyItemRemoved(deleteNoteIndex)
-                    }
-
-                    deleteSnackBar(deletedNoteIndexList, homeViewModel.selectedItems)
-                    homeViewModel.selectedItems.clear()
-                }
-            }
-
-            homeViewModel.actionMode!!.finish()
+            actionItemClicked(p1)
             return true
         }
 
         override fun onDestroyActionMode(p0: ActionMode?) {
-
-            for (item in homeViewModel.selectedItems) {
-                item.isSelected = false
-
-                //notifying adapter for only those items which have changed
-                //by finding their index
-                adapter.notifyItemChanged(homeViewModel.displayNotesList.indexOf(item))
-            }
-
-            //resetting selection list
-            homeViewModel.selectedItems.clear()
-            homeViewModel.selectionMode = false
-
-            homeViewModel.actionMode = null
+            actionModeDestroyed()
         }
     }
 
-    /**========================================= METHOD FOR HANDLING DELETING SNACK BAR ==============================================**/
+    /**==================================== METHOD FOR HANDLING ACTION ITEMS CLICKS =======================================**/
+    private fun actionItemClicked(p1: MenuItem?) {
+        var deleteNoteIndex: Int
+        val deletedNoteIndexList: MutableList<Int> = mutableListOf()
+
+        when (p1!!.itemId) {
+            R.id.contextual_delete -> {
+
+                //filling index list first, cause notes list size will vary when deleting notes
+                for (item in homeViewModel.selectedItems) {
+                    deleteNoteIndex = homeViewModel.displayNotesList.indexOf(item)
+                    deletedNoteIndexList.add(deleteNoteIndex)
+                }
+
+                //removing only selected items one by one
+                for (item in homeViewModel.selectedItems) {
+                    deleteNoteIndex = homeViewModel.displayNotesList.indexOf(item)
+                    homeViewModel.deleteNote(deleteNoteIndex)
+                    adapter.notifyItemRemoved(deleteNoteIndex)
+                }
+
+                deleteSnackBar(deletedNoteIndexList, homeViewModel.selectedItems)
+                homeViewModel.selectedItems.clear()
+            }
+        }
+
+        homeViewModel.actionMode!!.finish()
+    }
+
+    /**==================================== METHOD FOR HANDLING ACTION MODE DESTROYED ====================================**/
+    private fun actionModeDestroyed() {
+        for (item in homeViewModel.selectedItems) {
+            item.isSelected = false
+
+            //notifying adapter for only those items which have changed
+            //by finding their index
+            adapter.notifyItemChanged(homeViewModel.displayNotesList.indexOf(item))
+        }
+
+        //resetting selection list
+        homeViewModel.selectedItems.clear()
+        homeViewModel.selectionMode = false
+
+        homeViewModel.actionMode = null
+    }
+
+    /**========================================= METHOD FOR HANDLING DELETING SNACK BAR =======================================**/
     private fun deleteSnackBar(
         indexList: MutableList<Int>,
         NotesList: MutableList<Notes>
