@@ -11,9 +11,17 @@ class HomeViewModel : ViewModel() {
         const val NOTE_INDEX_KEY = "com.example.notesapp.activities.note_index_key"
     }
 
-    private val _notesList: MutableList<Notes> = mutableListOf()
+    private var _displayNotesList: MutableList<Notes> = mutableListOf()
+    val displayNotesList: MutableList<Notes>
+        get() = _displayNotesList
+
+    private var _notesList: MutableList<Notes> = mutableListOf()
     val notesList: MutableList<Notes>
         get() = _notesList
+
+    private var _archivesList: MutableList<Notes> = mutableListOf()
+    val archivesList: MutableList<Notes>
+        get() = _archivesList
 
 
     var actionMode: ActionMode? = null
@@ -23,25 +31,35 @@ class HomeViewModel : ViewModel() {
 
     /**====================================== FUNCTION FOR ADDING NOTES TO NOTES LIST ========================================**/
     fun addNote(note: Notes) {
-        _notesList.add(note)
+        _displayNotesList.add(note)
     }
 
     fun addNoteAt(index: Int, note: Notes) {
-        _notesList.add(index, note)
+        _displayNotesList.add(index, note)
     }
 
     /**====================================== FUNCTION FOR UPDATING NOTES TO NOTES LIST ======================================**/
     fun editNote(note: Notes, index: Int) {
-        _notesList[index] = note
+        _displayNotesList[index] = note
     }
 
     /**====================================== FUNCTION FOR DELETING NOTES FROM NOTES LIST ====================================**/
     fun deleteNote(index: Int) {
-        _notesList.removeAt(index)
+        _displayNotesList.removeAt(index)
     }
 
     /**==================================== FUNCTION FOR TOGGLING  SELECTION IN NOTES LIST ====================================**/
     fun setSelected(index: Int, isSelected: Boolean) {
-        _notesList[index].isSelected = isSelected
+        _displayNotesList[index].isSelected = isSelected
+    }
+
+    fun switchToNotes() {
+        _archivesList = _displayNotesList
+        _displayNotesList = _notesList
+    }
+
+    fun switchToArchives() {
+        _notesList = _displayNotesList
+        _displayNotesList = _archivesList
     }
 }

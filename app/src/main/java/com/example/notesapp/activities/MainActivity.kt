@@ -3,9 +3,6 @@ package com.example.notesapp.activities
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.ActionMode
-import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -13,10 +10,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.notesapp.R
 import com.example.notesapp.adapters.HomeRecyclerAdapter
+import com.example.notesapp.controllers.ActionModeController
+import com.example.notesapp.controllers.NavigationMenuController
 import com.example.notesapp.dataModels.Notes
 import com.example.notesapp.databinding.ActivityMainBinding
 import com.example.notesapp.viewModels.HomeViewModel
-import com.google.android.material.snackbar.Snackbar
 
 
 class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterface {
@@ -42,9 +40,15 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
     /**================================== METHOD FOR INITIALIZING TOOLBAR AND RECYCLER VIEW ==================================**/
     private fun init() {
 
-        //reactivating action mode for screen rotation change if it is previously triggered
+        //REACTIVATING ACTION MODE IF IT WAS PREVIOUSLY TRIGGERED
         if (homeViewModel.actionMode != null) {
-            homeViewModel.actionMode = startActionMode(ActionModeCallback())!!
+            homeViewModel.actionMode = startActionMode(
+                ActionModeController(
+                    homeViewModel,
+                    adapter,
+                    binding
+                ).ActionModeCallback()
+            )!!
             homeViewModel.actionMode!!.title = homeViewModel.selectedItems.size.toString()
         }
 
@@ -58,13 +62,15 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
                 R.string.close
             )
         binding.homeDrawer.addDrawerListener(mToggle)
+        binding.homeNavigationView.setNavigationItemSelectedListener(NavigationMenuController.mOnNavigationItemSelectedListener)
 
         mToggle.syncState()
         binding.homeToolbar.title = "Notes"
 
-        adapter = HomeRecyclerAdapter(homeViewModel.notesList, this)
+        adapter = HomeRecyclerAdapter(homeViewModel.displayNotesList, this)
         binding.homeRv.adapter = adapter
     }
+
 
     /**========================================== CALLBACK FOR RECEIVING NEW NOTE =================================================**/
     private var addNoteCallback =
@@ -75,7 +81,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
 
                 if (!noteTitle.isNullOrEmpty() || !noteBody.isNullOrEmpty()) {
                     homeViewModel.addNote(Notes(noteTitle!!.trim(), noteBody!!.trim(), false))
-                    adapter.notifyItemInserted(homeViewModel.notesList.size)
+                    adapter.notifyItemInserted(homeViewModel.displayNotesList.size)
                 }
             }
         }
@@ -104,87 +110,28 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
         addNoteCallback.launch(intent)
     }
 
-    /**=================================================== CALLBACK FOR CONTEXTUAL MENU =============================================**/
-    inner class ActionModeCallback : ActionMode.Callback {
-        override fun onCreateActionMode(p0: ActionMode?, p1: Menu?): Boolean {
-            p0!!.menuInflater.inflate(R.menu.menu_contextual, p1)
-            return true
-        }
-
-        override fun onPrepareActionMode(p0: ActionMode?, p1: Menu?): Boolean {
-            return true
-        }
-
-        override fun onActionItemClicked(p0: ActionMode?, p1: MenuItem?): Boolean {
-            var deleteNoteIndex: Int
-            val deletedNoteIndexList: MutableList<Int> = mutableListOf()
-
-            when (p1!!.itemId) {
-                R.id.contextual_delete -> {
-
-                    //filling index list first, cause notes list size will vary when deleting notes
-                    for (item in homeViewModel.selectedItems) {
-                        deleteNoteIndex = homeViewModel.notesList.indexOf(item)
-                        deletedNoteIndexList.add(deleteNoteIndex)
-                    }
-
-                    //removing only selected items one by one
-                    for (item in homeViewModel.selectedItems) {
-                        deleteNoteIndex = homeViewModel.notesList.indexOf(item)
-                        homeViewModel.deleteNote(deleteNoteIndex)
-                        adapter.notifyItemRemoved(deleteNoteIndex)
-                    }
-
-                    deleteSnackBar(deletedNoteIndexList, homeViewModel.selectedItems)
-                    homeViewModel.selectedItems.clear()
-                }
-            }
-
-            homeViewModel.actionMode!!.finish()
-            return true
-        }
-
-        override fun onDestroyActionMode(p0: ActionMode?) {
-
-            for (item in homeViewModel.selectedItems) {
-                item.isSelected = false
-
-                //notifying adapter for only those items which have changed
-                //by finding their index
-                adapter.notifyItemChanged(homeViewModel.notesList.indexOf(item))
-            }
-
-            //resetting selection list
-            homeViewModel.selectedItems.clear()
-            homeViewModel.selectionMode = false
-
-            homeViewModel.actionMode = null
-        }
-    }
-
 
     /**===================================================== CARD ON CLICK =============================================================**/
     override fun cardOnClick(position: Int) {
 
         //card selection mode
         if (homeViewModel.selectionMode) {
-            contextualMenuControl(position)
+            notesSelectionControl(position)
         }
         //open note
         else {
             val intent = Intent(this, AddNoteActivity::class.java)
+                .putExtra(
+                    HomeViewModel.NOTE_TITLE_KEY,
+                    homeViewModel.displayNotesList[position].head
+                )
+                .putExtra(
+                    HomeViewModel.NOTE_BODY_KEY,
+                    homeViewModel.displayNotesList[position].body
+                )
+                .putExtra(HomeViewModel.NOTE_INDEX_KEY, position)
 
-            intent.putExtra(
-                HomeViewModel.NOTE_TITLE_KEY,
-                homeViewModel.notesList[position].head
-            )
-
-            intent.putExtra(
-                HomeViewModel.NOTE_BODY_KEY,
-                homeViewModel.notesList[position].body
-            )
-
-            intent.putExtra(HomeViewModel.NOTE_INDEX_KEY, position)
+            //staring add/edit note activity
             editNoteCallback.launch(intent)
         }
     }
@@ -192,22 +139,28 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
     /**===================================================== CARD LONG CLICK =============================================================**/
     override fun cardLongClick(position: Int) {
 
-        //contextual menu opens by singleton pattern
+        //CONTEXTUAL MENU STARTS BY SINGLETON PATTERN
         if (homeViewModel.actionMode == null)
-            homeViewModel.actionMode = startActionMode(ActionModeCallback())!!
+            homeViewModel.actionMode = startActionMode(
+                ActionModeController(
+                    homeViewModel,
+                    adapter,
+                    binding
+                ).ActionModeCallback()
+            )!!
 
         homeViewModel.selectionMode = true
-        contextualMenuControl(position)
+        notesSelectionControl(position)
     }
 
     /**================================== METHOD SELECTION CONTROL ON CONTEXTUAL MENU ===========================================**/
-    private fun contextualMenuControl(position: Int) {
-        if (homeViewModel.selectedItems.contains(homeViewModel.notesList[position])) {
+    private fun notesSelectionControl(position: Int) {
+        if (homeViewModel.selectedItems.contains(homeViewModel.displayNotesList[position])) {
             homeViewModel.setSelected(position, false)
-            homeViewModel.selectedItems.remove(homeViewModel.notesList[position])
+            homeViewModel.selectedItems.remove(homeViewModel.displayNotesList[position])
         } else {
             homeViewModel.setSelected(position, true)
-            homeViewModel.selectedItems.add(homeViewModel.notesList[position])
+            homeViewModel.selectedItems.add(homeViewModel.displayNotesList[position])
         }
 
         if (homeViewModel.selectedItems.size == 0) {
@@ -219,55 +172,5 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
 
         if (homeViewModel.actionMode != null)
             homeViewModel.actionMode!!.title = homeViewModel.selectedItems.size.toString()
-    }
-
-    /**========================================= METHOD FOR HANDLING DELETING SNACK BAR ==============================================**/
-    private fun deleteSnackBar(
-        indexList: MutableList<Int>,
-        NotesList: MutableList<Notes>
-    ) {
-
-        //mapping indexes to notes list
-        var notesMapList = mutableMapOf<Int, Notes>()
-        for (i in 0 until indexList.size)
-            notesMapList[indexList[i]] = NotesList[i]
-
-        //sorting indexes for removing selection order
-        indexList.sort()
-        notesMapList = notesMapList.toSortedMap()
-
-        //making snack bar
-        val snackBar = Snackbar.make(
-            binding.homeRootLayout,
-            if (notesMapList.size > 1) "Notes Deleted" else "Note Deleted",
-            Snackbar.LENGTH_LONG
-        )
-
-        //DISMISS LISTENER
-        snackBar.addCallback(object : Snackbar.Callback() {
-            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                super.onDismissed(transientBottomBar, event)
-                indexList.clear()
-                notesMapList.clear()
-            }
-        })
-
-        //SNACK BAR UNDO BUTTON
-        snackBar.setAction("UNDO") {
-            println(notesMapList)
-
-            for (i in indexList) {
-                notesMapList[i]!!.isSelected = false
-                homeViewModel.addNoteAt(i, notesMapList[i]!!)
-                adapter.notifyItemInserted(i)
-            }
-
-            Snackbar.make(
-                binding.homeRootLayout,
-                if (notesMapList.size > 1) "Notes Recovered" else "Note Recovered",
-                Snackbar.LENGTH_SHORT
-            ).show()
-        }
-        snackBar.show()
     }
 }
