@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
 
 
         //INITIALIZING NAVIGATION MENU
-        NavigationMenuController.initNavigationMenu(this, binding,homeViewModel,adapter)
+        NavigationMenuController.initNavigationMenu(this, binding, homeViewModel, adapter)
 
 
         //REACTIVATING ACTION MODE IF IT WAS PREVIOUSLY TRIGGERED
@@ -65,11 +65,14 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
     private var addNoteCallback =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it?.resultCode == Activity.RESULT_OK) {
-                val noteTitle = it.data?.getStringExtra(AddNoteActivity.SEND_BACK_TITLE_KEY)
-                val noteBody = it.data?.getStringExtra(AddNoteActivity.SEND_BACK_BODY_KEY)
+                var noteTitle = it.data?.getStringExtra(AddNoteActivity.SEND_BACK_TITLE_KEY)
+                var noteBody = it.data?.getStringExtra(AddNoteActivity.SEND_BACK_BODY_KEY)
+
+                noteTitle = noteTitle!!.trim()
+                noteBody = noteBody!!.trim()
 
                 if (!noteTitle.isNullOrEmpty() || !noteBody.isNullOrEmpty()) {
-                    homeViewModel.addNote(Notes(noteTitle!!.trim(), noteBody!!.trim(), false))
+                    homeViewModel.addNote(Notes(noteTitle, noteBody, false))
                     adapter.notifyItemInserted(homeViewModel.displayNotesList.size)
                 }
             }
@@ -79,13 +82,16 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
     private var editNoteCallback =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it?.resultCode == Activity.RESULT_OK) {
-                val noteTitle = it.data?.getStringExtra(AddNoteActivity.SEND_BACK_TITLE_KEY)
-                val noteBody = it.data?.getStringExtra(AddNoteActivity.SEND_BACK_BODY_KEY)
+                var noteTitle = it.data?.getStringExtra(AddNoteActivity.SEND_BACK_TITLE_KEY)
+                var noteBody = it.data?.getStringExtra(AddNoteActivity.SEND_BACK_BODY_KEY)
                 val noteIndex = it.data?.getIntExtra(AddNoteActivity.SEND_BACK_INDEX_KEY, -1)!!
+
+                noteTitle = noteTitle!!.trim()
+                noteBody = noteBody!!.trim()
 
                 if (!noteTitle.isNullOrEmpty() || !noteBody.isNullOrEmpty()) {
                     homeViewModel.editNote(
-                        Notes(noteTitle!!.trim(), noteBody!!.trim(), false),
+                        Notes(noteTitle, noteBody, false),
                         noteIndex
                     )
                     adapter.notifyItemChanged(noteIndex)
