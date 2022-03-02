@@ -16,12 +16,7 @@ class HomeViewModel : ViewModel() {
         get() = _displayNotesList
 
     private var _notesList: MutableList<Notes> = mutableListOf()
-    val notesList: MutableList<Notes>
-        get() = _notesList
-
     private var _archivesList: MutableList<Notes> = mutableListOf()
-    val archivesList: MutableList<Notes>
-        get() = _archivesList
 
 
     var actionMode: ActionMode? = null
@@ -54,12 +49,19 @@ class HomeViewModel : ViewModel() {
     }
 
     fun switchToNotes() {
-        _archivesList = _displayNotesList
-        _displayNotesList = _notesList
+
+        _archivesList.clear()
+        _archivesList.addAll(_displayNotesList)
+
+        _displayNotesList.clear()
+        _displayNotesList.addAll(_notesList)
     }
 
     fun switchToArchives() {
-        _notesList = _displayNotesList
-        _displayNotesList = _archivesList
+        _notesList.clear()
+        _notesList.addAll(_displayNotesList)
+
+        _displayNotesList.clear()
+        _displayNotesList.addAll(_archivesList)
     }
 }

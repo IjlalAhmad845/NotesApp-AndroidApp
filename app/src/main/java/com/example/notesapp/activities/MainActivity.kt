@@ -38,6 +38,14 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
 
     /**================================== METHOD FOR INITIALIZING TOOLBAR AND RECYCLER VIEW ==================================**/
     private fun init() {
+        //INITIALIZING RECYCLER VIEW
+        adapter = HomeRecyclerAdapter(homeViewModel.displayNotesList, this)
+        binding.homeRv.adapter = adapter
+
+
+        //INITIALIZING NAVIGATION MENU
+        NavigationMenuController.initNavigationMenu(this, binding,homeViewModel,adapter)
+
 
         //REACTIVATING ACTION MODE IF IT WAS PREVIOUSLY TRIGGERED
         if (homeViewModel.actionMode != null) {
@@ -50,13 +58,6 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
             )!!
             homeViewModel.actionMode!!.title = homeViewModel.selectedItems.size.toString()
         }
-
-        //INITIALIZING NAVIGATION MENU
-        NavigationMenuController.initNavigationMenu(this, binding)
-
-        //INITIALIZING RECYCLER VIEW
-        adapter = HomeRecyclerAdapter(homeViewModel.displayNotesList, this)
-        binding.homeRv.adapter = adapter
     }
 
 

@@ -1,16 +1,23 @@
 package com.example.notesapp.controllers
 
 import android.app.Activity
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import com.example.notesapp.R
+import com.example.notesapp.adapters.HomeRecyclerAdapter
 import com.example.notesapp.databinding.ActivityMainBinding
+import com.example.notesapp.viewModels.HomeViewModel
 
-class NavigationMenuController() {
+class NavigationMenuController {
     companion object {
 
-        fun initNavigationMenu(context: Activity, binding: ActivityMainBinding) {
+        /**====================================== FUNCTION FOR INITIALIZING NAVIGATION MENU ======================================**/
+        fun initNavigationMenu(
+            context: Activity,
+            binding: ActivityMainBinding,
+            homeViewModel: HomeViewModel,
+            adapter: HomeRecyclerAdapter
+        ) {
             //SETTING NAVIGATION MENU
             val mToggle =
                 ActionBarDrawerToggle(
@@ -21,33 +28,46 @@ class NavigationMenuController() {
                     R.string.close
                 )
             binding.homeDrawer.addDrawerListener(mToggle)
+            mToggle.syncState()
+            binding.homeToolbar.title = "Notes"
+
+            navItemClickListener(binding, homeViewModel, adapter)
+        }
+
+        /**======================================= FUNCTION FOR HANDLING NAV ITEMS CLICKS =========================================**/
+        private fun navItemClickListener(
+            binding: ActivityMainBinding,
+            homeViewModel: HomeViewModel,
+            adapter: HomeRecyclerAdapter
+        ) {
             binding.homeNavigationView.setNavigationItemSelectedListener {
-                navigationItemsClickListener(context, it.itemId)
+
+                when (it.itemId) {
+                    R.id.action_notes -> {
+
+                        homeViewModel.switchToNotes()
+                        adapter.notifyDataSetChanged()
+
+                        println(homeViewModel.displayNotesList.size)
+
+                        binding.homeToolbar.title = "Notes"
+                    }
+                    R.id.action_archives -> {
+                        val notesSize = homeViewModel.displayNotesList.size
+
+                        homeViewModel.switchToArchives()
+                        adapter.notifyDataSetChanged()
+
+                        binding.homeToolbar.title = "Archives"
+                    }
+                }
 
                 if (it.itemId != R.id.action_theme)
                     binding.homeDrawer.closeDrawer(GravityCompat.START)
 
-                false
-            }
-
-            mToggle.syncState()
-            binding.homeToolbar.title = "Notes"
-        }
-
-
-        /**================================== METHOD FOR HANDLING NAV ITEMS CLICKS ================================================**/
-        private fun navigationItemsClickListener(context: Activity, item: Int) {
-
-            when (item) {
-                R.id.action_notes -> Toast.makeText(context, "notes Clicked", Toast.LENGTH_SHORT)
-                    .show()
-
-                R.id.action_archives -> Toast.makeText(
-                    context,
-                    "archives Clicked",
-                    Toast.LENGTH_SHORT
-                ).show()
+                true
             }
         }
-    }
+
+    } //End Companion Object
 }
