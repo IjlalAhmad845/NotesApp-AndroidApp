@@ -44,21 +44,28 @@ class NavigationMenuController {
 
                 when (it.itemId) {
                     R.id.action_notes -> {
+                        if (!binding.homeToolbar.title.equals("Notes")) {
+                            val archivesSize = homeViewModel.displayNotesList.size
 
-                        homeViewModel.switchToNotes()
-                        adapter.notifyDataSetChanged()
+                            homeViewModel.switchToNotes()
+                            adapter.notifyItemRangeRemoved(0, archivesSize)
+                            adapter.notifyItemRangeInserted(0, homeViewModel.displayNotesList.size)
 
-                        println(homeViewModel.displayNotesList.size)
+                            println(homeViewModel.displayNotesList.size)
 
-                        binding.homeToolbar.title = "Notes"
+                            binding.homeToolbar.title = "Notes"
+                        }
                     }
                     R.id.action_archives -> {
-                        val notesSize = homeViewModel.displayNotesList.size
+                        if (!binding.homeToolbar.title.equals("Archives")) {
+                            val notesSize = homeViewModel.displayNotesList.size
 
-                        homeViewModel.switchToArchives()
-                        adapter.notifyDataSetChanged()
+                            homeViewModel.switchToArchives()
+                            adapter.notifyItemRangeRemoved(0, notesSize)
+                            adapter.notifyItemRangeInserted(0, homeViewModel.displayNotesList.size)
 
-                        binding.homeToolbar.title = "Archives"
+                            binding.homeToolbar.title = "Archives"
+                        }
                     }
                 }
 
