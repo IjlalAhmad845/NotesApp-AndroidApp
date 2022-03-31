@@ -25,22 +25,30 @@ class HomeViewModel : ViewModel() {
 
 
     /**====================================== FUNCTION FOR ADDING NOTES TO NOTES LIST ========================================**/
-    fun addNote(note: Notes) {
+    fun addDisplayNote(note: Notes) {
         _displayNotesList.add(note)
     }
 
-    fun addNoteAt(index: Int, note: Notes) {
+    fun addDisplayNoteAt(index: Int, note: Notes) {
         _displayNotesList.add(index, note)
     }
 
     /**====================================== FUNCTION FOR UPDATING NOTES TO NOTES LIST ======================================**/
-    fun editNote(note: Notes, index: Int) {
+    fun editDisplayNote(note: Notes, index: Int) {
         _displayNotesList[index] = note
     }
 
     /**====================================== FUNCTION FOR DELETING NOTES FROM NOTES LIST ====================================**/
-    fun deleteNote(index: Int) {
+    fun deleteDisplayNote(index: Int) {
         _displayNotesList.removeAt(index)
+    }
+
+    fun addToArchive(note: Notes) {
+        _archivesList.add(note);
+    }
+
+    fun addToNotes(note: Notes) {
+        _archivesList.add(note);
     }
 
     /**==================================== FUNCTION FOR TOGGLING  SELECTION IN NOTES LIST ====================================**/
