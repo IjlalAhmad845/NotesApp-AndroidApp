@@ -60,7 +60,7 @@ class HomeRecyclerAdapter(
                     View.VISIBLE
                 } else {
                     holder.noteCard.setBackgroundResource(android.R.color.transparent)
-                    View.GONE
+                    View.INVISIBLE
                 }
 
             if (note.isSelected)

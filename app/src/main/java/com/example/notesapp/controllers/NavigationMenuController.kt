@@ -43,7 +43,7 @@ class NavigationMenuController {
             binding.homeNavigationView.setNavigationItemSelectedListener {
 
                 when (it.itemId) {
-                    R.id.action_notes -> {
+                    R.id.nav_notes -> {
                         if (!binding.homeToolbar.title.equals("Notes")) {
                             val archivesSize = homeViewModel.displayNotesList.size
 
@@ -56,7 +56,7 @@ class NavigationMenuController {
                             binding.homeToolbar.title = "Notes"
                         }
                     }
-                    R.id.action_archives -> {
+                    R.id.nav_archives -> {
                         if (!binding.homeToolbar.title.equals("Archives")) {
                             val notesSize = homeViewModel.displayNotesList.size
 

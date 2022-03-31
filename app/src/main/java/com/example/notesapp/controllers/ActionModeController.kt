@@ -3,6 +3,8 @@ package com.example.notesapp.controllers
 import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import androidx.drawerlayout.widget.DrawerLayout
 import com.example.notesapp.R
 import com.example.notesapp.adapters.HomeRecyclerAdapter
 import com.example.notesapp.dataModels.Notes
@@ -38,26 +40,49 @@ class ActionModeController(
 
     /**==================================== METHOD FOR HANDLING ACTION ITEMS CLICKS =======================================**/
     private fun actionItemClicked(p1: MenuItem?) {
-        var deleteNoteIndex: Int
-        val deletedNoteIndexList: MutableList<Int> = mutableListOf()
+        var removedNoteIndex: Int
+        val removedNoteIndexList: MutableList<Int> = mutableListOf()
 
         when (p1!!.itemId) {
             R.id.contextual_delete -> {
 
                 //filling index list first, cause notes list size will vary when deleting notes
                 for (item in homeViewModel.selectedItems) {
-                    deleteNoteIndex = homeViewModel.displayNotesList.indexOf(item)
-                    deletedNoteIndexList.add(deleteNoteIndex)
+                    removedNoteIndex = homeViewModel.displayNotesList.indexOf(item)
+                    removedNoteIndexList.add(removedNoteIndex)
                 }
 
                 //removing only selected items one by one
                 for (item in homeViewModel.selectedItems) {
-                    deleteNoteIndex = homeViewModel.displayNotesList.indexOf(item)
-                    homeViewModel.deleteNote(deleteNoteIndex)
-                    adapter.notifyItemRemoved(deleteNoteIndex)
+                    removedNoteIndex = homeViewModel.displayNotesList.indexOf(item)
+                    homeViewModel.deleteDisplayNote(removedNoteIndex)
+                    adapter.notifyItemRemoved(removedNoteIndex)
                 }
 
-                deleteSnackBar(deletedNoteIndexList, homeViewModel.selectedItems)
+                deleteSnackBar(removedNoteIndexList, homeViewModel.selectedItems)
+                homeViewModel.selectedItems.clear()
+            }
+            R.id.contextual_archive -> {
+
+                //filling index list first, cause notes list size will vary when deleting notes
+                for (item in homeViewModel.selectedItems) {
+                    removedNoteIndex = homeViewModel.displayNotesList.indexOf(item)
+                    removedNoteIndexList.add(removedNoteIndex)
+                }
+
+                //removing only selected items one by one
+                for (item in homeViewModel.selectedItems) {
+                    removedNoteIndex = homeViewModel.displayNotesList.indexOf(item)
+                    homeViewModel.deleteDisplayNote(removedNoteIndex)
+                    adapter.notifyItemRemoved(removedNoteIndex)
+                }
+
+                archiveSnackBar(
+                    removedNoteIndexList,
+                    homeViewModel.selectedItems,
+                    homeViewModel,
+                    binding
+                )
                 homeViewModel.selectedItems.clear()
             }
         }
@@ -104,33 +129,99 @@ class ActionModeController(
             Snackbar.LENGTH_LONG
         )
 
-        //DISMISS LISTENER
-        snackBar.addCallback(object : Snackbar.Callback() {
-            override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                super.onDismissed(transientBottomBar, event)
-                indexList.clear()
-                notesMapList.clear()
+            //DISMISS LISTENER
+            .addCallback(object : Snackbar.Callback() {
+                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                    super.onDismissed(transientBottomBar, event)
+                    indexList.clear()
+                    notesMapList.clear()
+                }
+            })
+
+            //SNACK BAR UNDO BUTTON
+            .setAction("UNDO") {
+
+                for (item in indexList) {
+                    notesMapList[item]!!.isSelected = false
+                    homeViewModel.addDisplayNoteAt(item, notesMapList[item]!!)
+                    adapter.notifyItemInserted(item)
+                }
+
+                Snackbar.make(
+                    binding.homeRootLayout,
+                    if (notesMapList.size > 1) "Notes Recovered" else "Note Recovered",
+                    Snackbar.LENGTH_SHORT
+                ).show()
             }
-        })
-
-        //SNACK BAR UNDO BUTTON
-        snackBar.setAction("UNDO") {
-            println(notesMapList)
-
-            for (i in indexList) {
-                notesMapList[i]!!.isSelected = false
-                homeViewModel.addNoteAt(i, notesMapList[i]!!)
-                adapter.notifyItemInserted(i)
-            }
-
-            Snackbar.make(
-                binding.homeRootLayout,
-                if (notesMapList.size > 1) "Notes Recovered" else "Note Recovered",
-                Snackbar.LENGTH_SHORT
-            ).show()
-        }
-        snackBar.show()
+            .show()
     }
 
+    /**========================================= METHOD FOR HANDLING ARCHIVE SNACK BAR =======================================**/
+    private fun archiveSnackBar(
+        indexList: MutableList<Int>,
+        NotesList: MutableList<Notes>,
+        homeViewModel: HomeViewModel,
+        binding: ActivityMainBinding
+    ) {
+
+        //mapping indexes to notes list
+        var notesMapList = mutableMapOf<Int, Notes>()
+        for (i in 0 until indexList.size)
+            notesMapList[indexList[i]] = NotesList[i]
+
+        //sorting indexes for removing selection order
+        indexList.sort()
+        notesMapList = notesMapList.toSortedMap()
+
+        //ADDING TO ARCHIVES LIST
+        for (item in indexList) {
+            notesMapList[item]!!.isSelected = false
+            homeViewModel.addToArchive(notesMapList[item]!!)
+        }
+
+        //making snack bar
+        val snackBar = Snackbar.make(
+            binding.homeRootLayout,
+            if (notesMapList.size > 1) "Notes Archived" else "Note Archived",
+            Snackbar.LENGTH_LONG
+        )
+            //DISMISS LISTENER
+            .addCallback(object : Snackbar.Callback() {
+                override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                    super.onDismissed(transientBottomBar, event)
+                    indexList.clear()
+                    notesMapList.clear()
+                }
+            })
+            //SNACK BAR UNDO BUTTON
+            .setAction("UNDO") {
+
+                for (item in indexList) {
+                    notesMapList[item]!!.isSelected = false
+                    homeViewModel.addDisplayNoteAt(item, notesMapList[item]!!)
+                    homeViewModel.deleteFromArchived(notesMapList[item]!!)
+                    adapter.notifyItemInserted(item)
+                }
+
+                Snackbar.make(
+                    binding.homeRootLayout,
+                    if (notesMapList.size > 1) "Notes Recovered" else "Note Recovered",
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            }
+        snackBar.show()
+
+
+        //KILLING SNACK BAR WHEN NAVIGATION DRAWER IS OPENED FOR REMOVING UNDO FUNCTIONALITY
+        binding.homeDrawer.addDrawerListener(object : DrawerLayout.DrawerListener {
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {}
+            override fun onDrawerOpened(drawerView: View) {
+                snackBar.dismiss()
+            }
+
+            override fun onDrawerClosed(drawerView: View) {}
+            override fun onDrawerStateChanged(newState: Int) {}
+        })
+    }
 }
 

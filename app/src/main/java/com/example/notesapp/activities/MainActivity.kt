@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
                 noteBody = noteBody!!.trim()
 
                 if (!noteTitle.isNullOrEmpty() || !noteBody.isNullOrEmpty()) {
-                    homeViewModel.addNote(Notes(noteTitle, noteBody, false))
+                    homeViewModel.addDisplayNote(Notes(noteTitle, noteBody, false))
                     adapter.notifyItemInserted(homeViewModel.displayNotesList.size)
                 }
             }
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
                 noteBody = noteBody!!.trim()
 
                 if (!noteTitle.isNullOrEmpty() || !noteBody.isNullOrEmpty()) {
-                    homeViewModel.editNote(
+                    homeViewModel.editDisplayNote(
                         Notes(noteTitle, noteBody, false),
                         noteIndex
                     )
