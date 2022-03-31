@@ -47,6 +47,10 @@ class HomeViewModel : ViewModel() {
         _archivesList.add(note);
     }
 
+    fun deleteFromArchived(note: Notes) {
+        _archivesList.remove(note);
+    }
+
     fun addToNotes(note: Notes) {
         _archivesList.add(note);
     }
