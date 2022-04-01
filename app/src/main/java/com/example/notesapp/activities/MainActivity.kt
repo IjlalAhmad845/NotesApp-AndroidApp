@@ -78,10 +78,10 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
                 noteBody = noteBody!!.trim()
 
                 if (!noteTitle.isNullOrEmpty() || !noteBody.isNullOrEmpty()) {
-                    if (noteOperation == 0)
-                        addNewNote(noteTitle, noteBody)
-                    else if (noteOperation == 1)
-                        archiveNewNote(noteTitle, noteBody)
+                    when (noteOperation) {
+                        0 -> addNewNote(noteTitle, noteBody)
+                        1 -> archiveNewNote(noteTitle, noteBody)
+                    }
                 }
             }
         }
@@ -100,10 +100,16 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
                 noteBody = noteBody!!.trim()
 
                 if (!noteTitle.isNullOrEmpty() || !noteBody.isNullOrEmpty()) {
-                    if (noteOperation == 0)
-                        editNote(noteTitle, noteBody, noteIndex)
-                    else if (noteOperation == 1)
-                        archiveEditNote(noteIndex, noteTitle, noteBody)
+                    when (noteOperation) {
+                        //simply edit that note
+                        0 -> editNote(noteTitle, noteBody, noteIndex)
+
+                        //archive that note
+                        1 -> archiveAndUnArchiveNote(noteIndex, noteTitle, noteBody)
+
+                        //unarchive that note
+                        2 -> archiveAndUnArchiveNote(noteIndex, noteTitle, noteBody)
+                    }
                 }
             }
         }
@@ -204,7 +210,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
     }
 
     /**================================= METHOD FOR ARCHIVE EXISTING NOTE OF DISPLAY LIST ========================================**/
-    private fun archiveEditNote(
+    private fun archiveAndUnArchiveNote(
         noteIndex: Int,
         noteTitle: String,
         noteBody: String
@@ -218,21 +224,32 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
     /**==================================== METHOD FOR FOR HANDLING ARCHIVE SNACKBAR =================================**/
     private fun archiveSnackBar(noteTitle: String, noteBody: String) {
         val note = Notes(noteTitle, noteBody, false)
-        homeViewModel.addToArchive(note)
+        val isNoteSection = binding.homeToolbar.title == "Notes"
+
+        //ARCHIVING OR UnARCHIVING Based on Section
+        if (isNoteSection)
+            homeViewModel.addToArchive(note)
+        else
+            homeViewModel.addToNotes(note)
 
         val snackBar = Snackbar.make(
             binding.homeRootLayout,
-            "Note Archived",
+            if (isNoteSection) "Note Archived" else "Note UnArchived",
             Snackbar.LENGTH_SHORT
         )
             .setAction("UNDO") {
-                homeViewModel.deleteFromArchived(note)
                 homeViewModel.addDisplayNote(note)
                 adapter.notifyItemInserted(homeViewModel.displayNotesList.size)
 
+                //removing notes from opposite end
+                if (isNoteSection)
+                    homeViewModel.deleteFromArchived(note)
+                else
+                    homeViewModel.deleteFromNotes(note)
+
                 Snackbar.make(
                     binding.homeRootLayout,
-                    "Note Recovered",
+                    if (isNoteSection) "Note Recovered" else "Archive Recovered",
                     Snackbar.LENGTH_SHORT
                 ).show()
             }
