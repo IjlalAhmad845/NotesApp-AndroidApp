@@ -21,6 +21,11 @@ class ActionModeController(
     inner class ActionModeCallback : ActionMode.Callback {
         override fun onCreateActionMode(p0: ActionMode?, p1: Menu?): Boolean {
             p0!!.menuInflater.inflate(R.menu.menu_contextual, p1)
+
+            //changing archive icon when in archives section
+            if (binding.homeToolbar.title == "Archives")
+                p1!!.getItem(0).setIcon(R.drawable.ic_unarchive_note)
+
             return true
         }
 

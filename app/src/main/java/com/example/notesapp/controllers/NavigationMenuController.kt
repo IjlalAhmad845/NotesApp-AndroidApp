@@ -1,6 +1,7 @@
 package com.example.notesapp.controllers
 
 import android.app.Activity
+import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import com.example.notesapp.R
@@ -54,6 +55,7 @@ class NavigationMenuController {
                             println(homeViewModel.displayNotesList.size)
 
                             binding.homeToolbar.title = "Notes"
+                            binding.homeFab.visibility = View.VISIBLE
                         }
                     }
                     R.id.nav_archives -> {
@@ -65,6 +67,7 @@ class NavigationMenuController {
                             adapter.notifyItemRangeInserted(0, homeViewModel.displayNotesList.size)
 
                             binding.homeToolbar.title = "Archives"
+                            binding.homeFab.visibility = View.GONE
                         }
                     }
                 }
