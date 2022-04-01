@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="action_mode_color">#182023</color>
+    <color name="toolbar_color">#222C32</color>
+    <color name="background_color">#18181C</color>
+    <color name="note_color">#18D3D3</color>
+    <color name="note_selected_color">#B2BDC5</color>
+    <color name="icons_color">#B2BDC5</color>
+</resources>

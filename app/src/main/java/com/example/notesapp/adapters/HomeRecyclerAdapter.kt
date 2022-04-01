@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notesapp.R
 import com.example.notesapp.dataModels.Notes
@@ -57,6 +58,7 @@ class HomeRecyclerAdapter(
             holder.noteSelected.visibility =
                 if (note.isSelected) {
                     holder.noteCard.setBackgroundResource(R.drawable.note_selected_boundary)
+                    holder.noteSelected.setColorFilter(ContextCompat.getColor(holder.noteSelected.context,R.color.note_selected_color))
                     View.VISIBLE
                 } else {
                     holder.noteCard.setBackgroundResource(android.R.color.transparent)
