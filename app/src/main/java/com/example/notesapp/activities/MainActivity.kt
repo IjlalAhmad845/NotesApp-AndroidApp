@@ -284,14 +284,18 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
                 for (note in homeViewModel.displayNotesList) {
                     dao.insertNote(NotesEntity(itr++, note.head, note.body))
                 }
+                itr = 0
+                for (note in homeViewModel.archivesList) {
+                    dao.insertArchive(ArchivesEntity(itr++, note.head, note.body))
+                }
             } else {
+                for (note in homeViewModel.displayNotesList) {
+                    dao.insertArchive(ArchivesEntity(itr++, note.head, note.body))
+                }
+                itr = 0
                 for (note in homeViewModel.notesList) {
                     dao.insertNote(NotesEntity(itr++, note.head, note.body))
                 }
-            }
-
-            for (note in homeViewModel.archivesList) {
-                dao.insertArchive(ArchivesEntity(itr++, note.head, note.body))
             }
         }
         super.onStop()
