@@ -11,9 +11,6 @@ interface EntityDao {
     @Query("Select * from notes_table")
     suspend fun getNotes(): MutableList<NotesEntity>
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateNote(notesEntity: NotesEntity)
-
-    @Delete
-    suspend fun deleteNote(notesEntity: NotesEntity)
+    @Query("Delete from notes_table")
+    suspend fun deleteAllNotes()
 }

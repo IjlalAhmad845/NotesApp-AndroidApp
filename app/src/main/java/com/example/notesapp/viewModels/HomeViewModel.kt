@@ -1,10 +1,16 @@
 package com.example.notesapp.viewModels
 
+import android.app.Application
 import android.view.ActionMode
-import androidx.lifecycle.ViewModel
-import com.example.notesapp.dataModels.Notes
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 
-class HomeViewModel : ViewModel() {
+import com.example.notesapp.dataModels.Notes
+import com.example.notesapp.database.NotesDB
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
+class HomeViewModel(application: Application) : AndroidViewModel(application) {
     companion object {
         const val NOTE_TITLE_KEY = "com.example.notesapp.activities.note_title_key"
         const val NOTE_BODY_KEY = "com.example.notesapp.activities.note_body_key"
@@ -24,6 +30,21 @@ class HomeViewModel : ViewModel() {
     var selectionMode = false
     var selectedItems: MutableList<Notes> = mutableListOf()
 
+    //getting all notes from database
+    init {
+        val dao = NotesDB.getDatabase(application).EntityDao()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            val notesList = dao.getNotes()
+
+            for (note in notesList) {
+                _notesList.add(Notes(note.title, note.body, false))
+            }
+
+            _displayNotesList.clear()
+            _displayNotesList.addAll(_notesList)
+        }
+    }
 
     /**====================================== FUNCTION FOR ADDING NOTES TO NOTES LIST ========================================**/
     fun addDisplayNote(note: Notes) {
@@ -57,7 +78,7 @@ class HomeViewModel : ViewModel() {
     }
 
     fun deleteFromNotes(note: Notes) {
-        _notesList.remove(note);
+        _notesList.remove(note)
     }
 
     /**==================================== FUNCTION FOR TOGGLING  SELECTION IN NOTES LIST ====================================**/
