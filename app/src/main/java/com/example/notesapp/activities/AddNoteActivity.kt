@@ -2,6 +2,7 @@ package com.example.notesapp.activities
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
@@ -38,10 +39,17 @@ class AddNoteActivity : AppCompatActivity() {
         val noteTitle = data.getStringExtra(HomeViewModel.NOTE_TITLE_KEY)
         val noteBody = data.getStringExtra(HomeViewModel.NOTE_BODY_KEY)
         val position = data.getIntExtra(HomeViewModel.NOTE_INDEX_KEY, -1)
+        val noteType = data.getIntExtra(HomeViewModel.NOTE_TYPE_KEY, -1)
 
         //and text will be empty for empty intent
         binding.noteHeaderTextView.setText(noteTitle)
         binding.noteBodyTextView.setText(noteBody)
+        binding.noteArchiveButton.setImageResource(
+            if (noteType == 0)
+                R.drawable.ic_archive_note
+            else
+                R.drawable.ic_unarchive_note
+        )
 
         cardIndex = position
     }

@@ -128,7 +128,7 @@ class ActionModeController(
         notesMapList = notesMapList.toSortedMap()
 
         //making snack bar
-        val snackBar = Snackbar.make(
+        Snackbar.make(
             binding.homeRootLayout,
             if (notesMapList.size > 1) "Notes Deleted" else "Note Deleted",
             Snackbar.LENGTH_LONG

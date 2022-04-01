@@ -102,6 +102,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
     /**======================================= METHOD FOR STARTING ADD NOTE ACTIVITY =============================================**/
     private fun startAddNoteActivity() {
         val intent = Intent(this, AddNoteActivity::class.java)
+            .putExtra(HomeViewModel.NOTE_TYPE_KEY, 0)
         addNoteCallback.launch(intent)
     }
 
@@ -125,6 +126,10 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
                     homeViewModel.displayNotesList[position].body
                 )
                 .putExtra(HomeViewModel.NOTE_INDEX_KEY, position)
+                .putExtra(
+                    HomeViewModel.NOTE_TYPE_KEY,
+                    if (binding.homeToolbar.title == "Notes") 0 else 1
+                )
 
             //staring add/edit note activity
             editNoteCallback.launch(intent)

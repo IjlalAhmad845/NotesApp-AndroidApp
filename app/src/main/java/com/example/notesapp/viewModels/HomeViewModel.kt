@@ -9,6 +9,7 @@ class HomeViewModel : ViewModel() {
         const val NOTE_TITLE_KEY = "com.example.notesapp.activities.note_title_key"
         const val NOTE_BODY_KEY = "com.example.notesapp.activities.note_body_key"
         const val NOTE_INDEX_KEY = "com.example.notesapp.activities.note_index_key"
+        const val NOTE_TYPE_KEY = "com.example.notesapp.activities.note_type_key"
     }
 
     private var _displayNotesList: MutableList<Notes> = mutableListOf()
@@ -44,15 +45,15 @@ class HomeViewModel : ViewModel() {
     }
 
     fun addToArchive(note: Notes) {
-        _archivesList.add(note);
+        _archivesList.add(note)
     }
 
     fun deleteFromArchived(note: Notes) {
-        _archivesList.remove(note);
+        _archivesList.remove(note)
     }
 
     fun addToNotes(note: Notes) {
-        _archivesList.add(note);
+        _archivesList.add(note)
     }
 
     /**==================================== FUNCTION FOR TOGGLING  SELECTION IN NOTES LIST ====================================**/
