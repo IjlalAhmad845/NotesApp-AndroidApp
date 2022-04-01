@@ -12,9 +12,15 @@ import com.example.notesapp.viewModels.HomeViewModel
 
 class AddNoteActivity : AppCompatActivity() {
     companion object {
-        var SEND_BACK_TITLE_KEY = "com.example.notesapp.activities.sendTitleBack"
-        var SEND_BACK_BODY_KEY = "com.example.notesapp.activities.sendBodyBack"
-        var SEND_BACK_INDEX_KEY = "com.example.notesapp.activities.sendIndexBack"
+        const val SEND_BACK_TITLE_KEY = "com.example.notesapp.activities.sendTitleBack"
+        const val SEND_BACK_BODY_KEY = "com.example.notesapp.activities.sendBodyBack"
+        const val SEND_BACK_INDEX_KEY = "com.example.notesapp.activities.sendIndexBack"
+
+        /*
+         * 0 for just adding note to display list
+         * 1 for archive new adding note
+         * 2 for archiving pre made note
+        */
         const val SEND_BACK_NOTE_OPERATION_KEY = "com.example.notesapp.activities.sendTypeBack"
     }
 
@@ -52,8 +58,8 @@ class AddNoteActivity : AppCompatActivity() {
 
         //setting click listener based on note type
         binding.noteArchiveButton.setOnClickListener {
-            if (noteType == 0)   sendDataBack(1)
-            else      sendDataBack(2)
+            if (noteType == 0) sendDataBack(1)
+            else sendDataBack(2)
         }
 
         cardIndex = position
@@ -67,6 +73,7 @@ class AddNoteActivity : AppCompatActivity() {
         val data = Intent()
         data.putExtra(SEND_BACK_TITLE_KEY, title)
         data.putExtra(SEND_BACK_BODY_KEY, body)
+        //sending which operation should be done to note
         data.putExtra(SEND_BACK_NOTE_OPERATION_KEY, operation)
 
         if (cardIndex != -1)

@@ -3,7 +3,6 @@ package com.example.notesapp.activities
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -79,12 +78,10 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
                 noteBody = noteBody!!.trim()
 
                 if (!noteTitle.isNullOrEmpty() || !noteBody.isNullOrEmpty()) {
-                    if (noteOperation == 0) {
-                        homeViewModel.addDisplayNote(Notes(noteTitle, noteBody, false))
-                        adapter.notifyItemInserted(homeViewModel.displayNotesList.size)
-                    } else if (noteOperation == 1) {
-                        archiveSnackBar(noteTitle, noteBody)
-                    }
+                    if (noteOperation == 0)
+                        addNewNote(noteTitle, noteBody)
+                    else if (noteOperation == 1)
+                        archiveNewNote(noteTitle, noteBody)
                 }
             }
         }
@@ -103,18 +100,10 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
                 noteBody = noteBody!!.trim()
 
                 if (!noteTitle.isNullOrEmpty() || !noteBody.isNullOrEmpty()) {
-                    if (noteOperation == 0) {
-                        homeViewModel.editDisplayNote(
-                            Notes(noteTitle, noteBody, false),
-                            noteIndex
-                        )
-                        adapter.notifyItemChanged(noteIndex)
-                    } else {
-                        homeViewModel.deleteDisplayNote(noteIndex)
-                        adapter.notifyItemRemoved(noteIndex)
-
-                        archiveSnackBar(noteTitle, noteBody)
-                    }
+                    if (noteOperation == 0)
+                        editNote(noteTitle, noteBody, noteIndex)
+                    else if (noteOperation == 1)
+                        archiveEditNote(noteIndex, noteTitle, noteBody)
                 }
             }
         }
@@ -194,6 +183,39 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
             homeViewModel.actionMode!!.title = homeViewModel.selectedItems.size.toString()
     }
 
+    /**================================ METHOD FOR ADDING NEW NOTE TO DISPLAY LIST =====================================**/
+    private fun addNewNote(noteTitle: String, noteBody: String) {
+        homeViewModel.addDisplayNote(Notes(noteTitle, noteBody, false))
+        adapter.notifyItemInserted(homeViewModel.displayNotesList.size)
+    }
+
+    /**====================================== METHOD FOR EDIT  NOTE OF DISPLAY LIST =====================================**/
+    private fun editNote(noteTitle: String, noteBody: String, noteIndex: Int) {
+        homeViewModel.editDisplayNote(
+            Notes(noteTitle, noteBody, false),
+            noteIndex
+        )
+        adapter.notifyItemChanged(noteIndex)
+    }
+
+    /**================================= METHOD FOR ARCHIVE NEW NOTE OF DISPLAY LIST ========================================**/
+    private fun archiveNewNote(noteTitle: String, noteBody: String) {
+        archiveSnackBar(noteTitle, noteBody)
+    }
+
+    /**================================= METHOD FOR ARCHIVE EXISTING NOTE OF DISPLAY LIST ========================================**/
+    private fun archiveEditNote(
+        noteIndex: Int,
+        noteTitle: String,
+        noteBody: String
+    ) {
+        homeViewModel.deleteDisplayNote(noteIndex)
+        adapter.notifyItemRemoved(noteIndex)
+
+        archiveSnackBar(noteTitle, noteBody)
+    }
+
+    /**==================================== METHOD FOR FOR HANDLING ARCHIVE SNACKBAR =================================**/
     private fun archiveSnackBar(noteTitle: String, noteBody: String) {
         val note = Notes(noteTitle, noteBody, false)
         homeViewModel.addToArchive(note)
