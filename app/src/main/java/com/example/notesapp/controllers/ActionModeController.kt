@@ -130,10 +130,17 @@ class ActionModeController(
         indexList.sort()
         notesMapList = notesMapList.toSortedMap()
 
+        //snackBar message string
+        var snackBarMessage = if (isNotesSection) {
+            if (notesMapList.size > 1) "Notes Deleted" else "Note Deleted"
+        } else {
+            if (notesMapList.size > 1) "Archives Deleted" else "Archive Deleted"
+        }
+
         //making snack bar
         Snackbar.make(
             binding.homeRootLayout,
-            if (notesMapList.size > 1) "Notes Deleted" else "Note Deleted",
+            snackBarMessage,
             Snackbar.LENGTH_LONG
         )
 
@@ -155,9 +162,15 @@ class ActionModeController(
                     adapter.notifyItemInserted(item)
                 }
 
+                snackBarMessage = if (isNotesSection) {
+                    if (notesMapList.size > 1) "Notes Recovered" else "Note Recovered"
+                } else {
+                    if (notesMapList.size > 1) "Archives Recovered" else "Archive Recovered"
+                }
+
                 Snackbar.make(
                     binding.homeRootLayout,
-                    if (notesMapList.size > 1) "Notes Recovered" else "Note Recovered",
+                    snackBarMessage,
                     Snackbar.LENGTH_SHORT
                 ).show()
             }
