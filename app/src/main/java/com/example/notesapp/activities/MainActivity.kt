@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
             }
         }
 
-    /**======================================= METHOD FOR STARTING ADD NOTE ACTIVITY =============================================**/
+    /**======================================= METHOD FOR STARTING ADD NOTE ACTIVITY ===========================================**/
     private fun startAddNoteActivity() {
         val intent = Intent(this, AddNoteActivity::class.java)
             .putExtra(HomeViewModel.NOTE_TYPE_KEY, 0)
@@ -155,7 +155,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
         }
     }
 
-    /**===================================================== CARD LONG CLICK =============================================================**/
+    /**===================================================== CARD LONG CLICK ========================================================**/
     override fun cardLongClick(position: Int) {
 
         //CONTEXTUAL MENU STARTS BY SINGLETON PATTERN
@@ -172,7 +172,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
         notesSelectionControl(position)
     }
 
-    /**================================== METHOD SELECTION CONTROL ON CONTEXTUAL MENU ===========================================**/
+    /**================================== METHOD SELECTION CONTROL ON CONTEXTUAL MENU ====================================**/
     private fun notesSelectionControl(position: Int) {
         if (homeViewModel.selectedItems.contains(homeViewModel.displayNotesList[position])) {
             homeViewModel.setSelected(position, false)
@@ -193,13 +193,13 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
             homeViewModel.actionMode!!.title = homeViewModel.selectedItems.size.toString()
     }
 
-    /**================================ METHOD FOR ADDING NEW NOTE TO DISPLAY LIST =====================================**/
+    /**=================================== METHOD FOR ADDING NEW NOTE TO DISPLAY LIST =====================================**/
     private fun addNewNote(noteTitle: String, noteBody: String) {
         homeViewModel.addDisplayNote(Notes(noteTitle, noteBody, false))
         adapter.notifyItemInserted(homeViewModel.displayNotesList.size)
     }
 
-    /**====================================== METHOD FOR EDIT  NOTE OF DISPLAY LIST =====================================**/
+    /**========================================= METHOD FOR EDIT  NOTE OF DISPLAY LIST ========================================**/
     private fun editNote(noteTitle: String, noteBody: String, noteIndex: Int) {
         homeViewModel.editDisplayNote(
             Notes(noteTitle, noteBody, false),
@@ -208,12 +208,12 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
         adapter.notifyItemChanged(noteIndex)
     }
 
-    /**================================= METHOD FOR ARCHIVE NEW NOTE OF DISPLAY LIST ========================================**/
+    /**================================= METHOD FOR ARCHIVE NEW NOTE OF DISPLAY LIST =======================================**/
     private fun archiveNewNote(noteTitle: String, noteBody: String) {
         archiveSnackBar(noteTitle, noteBody)
     }
 
-    /**================================= METHOD FOR ARCHIVE EXISTING NOTE OF DISPLAY LIST ========================================**/
+    /**================================= METHOD FOR ARCHIVE EXISTING NOTE OF DISPLAY LIST =================================**/
     private fun archiveAndUnArchiveNote(
         noteIndex: Int,
         noteTitle: String,
@@ -225,7 +225,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
         archiveSnackBar(noteTitle, noteBody)
     }
 
-    /**==================================== METHOD FOR FOR HANDLING ARCHIVE SNACKBAR =================================**/
+    /**===================================== METHOD FOR FOR HANDLING ARCHIVE SNACK BAR =====================================**/
     private fun archiveSnackBar(noteTitle: String, noteBody: String) {
         val note = Notes(noteTitle, noteBody, false)
         val isNoteSection = binding.homeToolbar.title == "Notes"
@@ -271,7 +271,8 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
         })
     }
 
-    override fun onStop() {
+    /**=================================== METHOD FOR SAVING CHANGES TO DATABASE ON EXIT ============================**/
+    private fun saveChanges() {
 
         lifecycleScope.launch {
             val dao = NotesDB.getDatabase(this@MainActivity).EntityDao()
@@ -297,6 +298,10 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
                 }
             }
         }
+    }
+
+    override fun onStop() {
+        saveChanges()
         super.onStop()
     }
 }

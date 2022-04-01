@@ -35,58 +35,66 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     var selectedItems: MutableList<Notes> = mutableListOf()
     var isNotesSection = true
 
-    //getting all notes from database
+    //FIRST CALL OF VIEW MODEL
     init {
         val dao = NotesDB.getDatabase(application).EntityDao()
 
         viewModelScope.launch(Dispatchers.IO) {
+            //getting notes and archives
             val notesList = dao.getNotes()
+            val archivesList = dao.getArchives()
 
+            //adding to notes list
             for (note in notesList) {
                 _notesList.add(Notes(note.title, note.body, false))
             }
-
-            _displayNotesList.clear()
-            _displayNotesList.addAll(_notesList)
-
-            val archivesList = dao.getArchives()
+            //adding to archives list
             for (note in archivesList) {
                 _archivesList.add(Notes(note.title, note.body, false))
             }
+
+            //setting notes to display list
+            _displayNotesList.clear()
+            _displayNotesList.addAll(_notesList)
         }
     }
 
-    /**====================================== FUNCTION FOR ADDING NOTES TO NOTES LIST ========================================**/
+    /**=================================== FUNCTION FOR ADDING NOTES TO DISPLAYED LIST =======================================**/
     fun addDisplayNote(note: Notes) {
         _displayNotesList.add(note)
     }
 
+    /**============================ FUNCTION FOR ADDING NOTES TO DISPLAYED LIST AT INDEX ===================================**/
     fun addDisplayNoteAt(index: Int, note: Notes) {
         _displayNotesList.add(index, note)
     }
 
-    /**====================================== FUNCTION FOR UPDATING NOTES TO NOTES LIST ======================================**/
+    /**===================================== FUNCTION FOR UPDATING NOTES TO DISPLAYED LIST ==================================**/
     fun editDisplayNote(note: Notes, index: Int) {
         _displayNotesList[index] = note
     }
 
-    /**====================================== FUNCTION FOR DELETING NOTES FROM NOTES LIST ====================================**/
+    /**====================================== FUNCTION FOR DELETING NOTES FROM DISPLAYED LIST ===============================**/
     fun deleteDisplayNote(index: Int) {
         _displayNotesList.removeAt(index)
     }
 
+    /**=================================== FUNCTION FOR ADDING ARCHIVES TO ARCHIVES LIST ===================================**/
     fun addToArchive(note: Notes) {
         _archivesList.add(note)
     }
 
+    /**=================================== FUNCTION FOR REMOVING ARCHIVES FROM ARCHIVES LIST =============================**/
     fun deleteFromArchived(note: Notes) {
         _archivesList.remove(note)
     }
 
+    /**====================================== FUNCTION FOR ADDING NOTES TO NOTES LIST  ======================================**/
     fun addToNotes(note: Notes) {
         _notesList.add(note)
     }
 
+    /**===================================== FUNCTION FOR REMOVING NOTES FROM NOTES LIST  ==================================**/
     fun deleteFromNotes(note: Notes) {
         _notesList.remove(note)
     }
@@ -96,6 +104,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         _displayNotesList[index].isSelected = isSelected
     }
 
+    /**===================================== FUNCTION FOR SWITCHING  NOTES TO ARCHIVES ======================================**/
     fun switchToNotes() {
 
         _archivesList.clear()
@@ -105,6 +114,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         _displayNotesList.addAll(_notesList)
     }
 
+    /**====================================== FUNCTION FOR SWITCHING  ARCHIVES TO NOTES =====================================**/
     fun switchToArchives() {
         _notesList.clear()
         _notesList.addAll(_displayNotesList)
