@@ -33,6 +33,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     var actionMode: ActionMode? = null
     var selectionMode = false
     var selectedItems: MutableList<Notes> = mutableListOf()
+    var isNotesSection = true
 
     //getting all notes from database
     init {

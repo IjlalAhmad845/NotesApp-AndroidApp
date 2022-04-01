@@ -30,7 +30,9 @@ class NavigationMenuController {
                 )
             binding.homeDrawer.addDrawerListener(mToggle)
             mToggle.syncState()
-            binding.homeToolbar.title = "Notes"
+
+            //setting toolbar title (considering screen rotation)
+            binding.homeToolbar.title = if (homeViewModel.isNotesSection) "Notes" else "Archives"
 
             navItemClickListener(binding, homeViewModel, adapter)
         }
@@ -45,6 +47,7 @@ class NavigationMenuController {
 
                 when (it.itemId) {
                     R.id.nav_notes -> {
+                        homeViewModel.isNotesSection = true
                         if (!binding.homeToolbar.title.equals("Notes")) {
                             val archivesSize = homeViewModel.displayNotesList.size
 
@@ -59,6 +62,7 @@ class NavigationMenuController {
                         }
                     }
                     R.id.nav_archives -> {
+                        homeViewModel.isNotesSection = false
                         if (!binding.homeToolbar.title.equals("Archives")) {
                             val notesSize = homeViewModel.displayNotesList.size
 

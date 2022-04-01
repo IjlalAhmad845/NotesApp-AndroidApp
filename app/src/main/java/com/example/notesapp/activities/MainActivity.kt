@@ -25,7 +25,6 @@ import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterface {
-    private val tag = "MainActivity"
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var homeViewModel: HomeViewModel
@@ -279,7 +278,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
             dao.deleteAllNotes()
             dao.deleteAllArchives()
 
-            var itr = 0;
+            var itr = 0
             if (binding.homeToolbar.title == "Notes") {
                 for (note in homeViewModel.displayNotesList) {
                     dao.insertNote(NotesEntity(itr++, note.head, note.body))
