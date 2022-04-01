@@ -2,6 +2,7 @@ package com.example.notesapp.database
 
 import androidx.room.*
 
+@Dao
 interface EntityDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
