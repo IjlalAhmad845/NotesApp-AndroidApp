@@ -53,7 +53,11 @@ class HomeViewModel : ViewModel() {
     }
 
     fun addToNotes(note: Notes) {
-        _archivesList.add(note)
+        _notesList.add(note)
+    }
+
+    fun deleteFromNotes(note: Notes) {
+        _notesList.remove(note);
     }
 
     /**==================================== FUNCTION FOR TOGGLING  SELECTION IN NOTES LIST ====================================**/

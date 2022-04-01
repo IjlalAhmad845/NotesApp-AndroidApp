@@ -17,13 +17,16 @@ class ActionModeController(
     private val adapter: HomeRecyclerAdapter,
     private val binding: ActivityMainBinding
 ) {
+
+    private val isNotesSection = binding.homeToolbar.title == "Notes"
+
     /**=================================================== CALLBACK FOR CONTEXTUAL MENU =============================================**/
     inner class ActionModeCallback : ActionMode.Callback {
         override fun onCreateActionMode(p0: ActionMode?, p1: Menu?): Boolean {
             p0!!.menuInflater.inflate(R.menu.menu_contextual, p1)
 
             //changing archive icon when in archives section
-            if (binding.homeToolbar.title == "Archives")
+            if (!isNotesSection)
                 p1!!.getItem(0).setIcon(R.drawable.ic_unarchive_note)
 
             return true
@@ -178,16 +181,28 @@ class ActionModeController(
         indexList.sort()
         notesMapList = notesMapList.toSortedMap()
 
-        //ADDING TO ARCHIVES LIST
+        //ADDING TO ARCHIVES/NOTES LIST
         for (item in indexList) {
             notesMapList[item]!!.isSelected = false
-            homeViewModel.addToArchive(notesMapList[item]!!)
+
+            //checking for section
+            if (isNotesSection)
+                homeViewModel.addToArchive(notesMapList[item]!!)
+            else
+                homeViewModel.addToNotes(notesMapList[item]!!)
+        }
+
+        //snackBar message string
+        var snackBarMessage = if (isNotesSection) {
+            if (notesMapList.size > 1) "Notes Archived" else "Note Archived"
+        } else {
+            if (notesMapList.size > 1) "Notes UnArchived" else "Note UnArchived"
         }
 
         //making snack bar
         val snackBar = Snackbar.make(
             binding.homeRootLayout,
-            if (notesMapList.size > 1) "Notes Archived" else "Note Archived",
+            snackBarMessage,
             Snackbar.LENGTH_LONG
         )
             //DISMISS LISTENER
@@ -201,16 +216,31 @@ class ActionModeController(
             //SNACK BAR UNDO BUTTON
             .setAction("UNDO") {
 
+
                 for (item in indexList) {
+                    //recovering archived/unarchived notes
                     notesMapList[item]!!.isSelected = false
                     homeViewModel.addDisplayNoteAt(item, notesMapList[item]!!)
-                    homeViewModel.deleteFromArchived(notesMapList[item]!!)
+
+                    //deleting notes on opposite end
+                    //checking for section
+                    if (isNotesSection)
+                        homeViewModel.deleteFromArchived(notesMapList[item]!!)
+                    else
+                        homeViewModel.deleteFromNotes(notesMapList[item]!!)
+
                     adapter.notifyItemInserted(item)
+                }
+
+                snackBarMessage = if (isNotesSection) {
+                    if (notesMapList.size > 1) "Notes Recovered" else "Note Recovered"
+                } else {
+                    if (notesMapList.size > 1) "Archives Recovered" else "Archive Recovered"
                 }
 
                 Snackbar.make(
                     binding.homeRootLayout,
-                    if (notesMapList.size > 1) "Notes Recovered" else "Note Recovered",
+                    snackBarMessage,
                     Snackbar.LENGTH_SHORT
                 ).show()
             }
