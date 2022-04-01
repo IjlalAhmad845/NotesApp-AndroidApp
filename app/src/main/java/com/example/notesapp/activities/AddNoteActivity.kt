@@ -15,6 +15,7 @@ class AddNoteActivity : AppCompatActivity() {
         var SEND_BACK_TITLE_KEY = "com.example.notesapp.activities.sendTitleBack"
         var SEND_BACK_BODY_KEY = "com.example.notesapp.activities.sendBodyBack"
         var SEND_BACK_INDEX_KEY = "com.example.notesapp.activities.sendIndexBack"
+        const val SEND_BACK_NOTE_OPERATION_KEY = "com.example.notesapp.activities.sendTypeBack"
     }
 
     private lateinit var binding: ActivityAddNoteBinding
@@ -27,7 +28,7 @@ class AddNoteActivity : AppCompatActivity() {
 
         getNote()
         binding.noteBackButton.setOnClickListener {
-            sendDataBack()
+            sendDataBack(0)
         }
     }
 
@@ -45,23 +46,28 @@ class AddNoteActivity : AppCompatActivity() {
         binding.noteHeaderTextView.setText(noteTitle)
         binding.noteBodyTextView.setText(noteBody)
         binding.noteArchiveButton.setImageResource(
-            if (noteType == 0)
-                R.drawable.ic_archive_note
-            else
-                R.drawable.ic_unarchive_note
+            if (noteType == 0) R.drawable.ic_archive_note
+            else R.drawable.ic_unarchive_note
         )
+
+        //setting click listener based on note type
+        binding.noteArchiveButton.setOnClickListener {
+            if (noteType == 0)   sendDataBack(1)
+            else      sendDataBack(2)
+        }
 
         cardIndex = position
     }
 
     /**================================== METHOD FOR SENDING DATA BACK TO HOME ACTIVITY ==================================**/
-    private fun sendDataBack() {
+    private fun sendDataBack(operation: Int) {
         val title = binding.noteHeaderTextView.text.toString()
         val body = binding.noteBodyTextView.text.toString()
 
         val data = Intent()
         data.putExtra(SEND_BACK_TITLE_KEY, title)
         data.putExtra(SEND_BACK_BODY_KEY, body)
+        data.putExtra(SEND_BACK_NOTE_OPERATION_KEY, operation)
 
         if (cardIndex != -1)
             data.putExtra(SEND_BACK_INDEX_KEY, cardIndex)
@@ -72,6 +78,6 @@ class AddNoteActivity : AppCompatActivity() {
 
     /**======================================================= ON BACK PRESSED =======================================================**/
     override fun onBackPressed() {
-        sendDataBack()
+        sendDataBack(0)
     }
 }
