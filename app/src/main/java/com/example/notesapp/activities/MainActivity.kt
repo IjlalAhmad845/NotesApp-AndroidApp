@@ -15,6 +15,7 @@ import com.example.notesapp.adapters.HomeRecyclerAdapter
 import com.example.notesapp.controllers.ActionModeController
 import com.example.notesapp.controllers.NavigationMenuController
 import com.example.notesapp.dataModels.Notes
+import com.example.notesapp.database.ArchivesEntity
 import com.example.notesapp.database.NotesDB
 import com.example.notesapp.database.NotesEntity
 import com.example.notesapp.databinding.ActivityMainBinding
@@ -276,15 +277,21 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
         lifecycleScope.launch {
             val dao = NotesDB.getDatabase(this@MainActivity).EntityDao()
             dao.deleteAllNotes()
+            dao.deleteAllArchives()
 
             var itr = 0;
             if (binding.homeToolbar.title == "Notes") {
                 for (note in homeViewModel.displayNotesList) {
                     dao.insertNote(NotesEntity(itr++, note.head, note.body))
                 }
+            } else {
+                for (note in homeViewModel.notesList) {
+                    dao.insertNote(NotesEntity(itr++, note.head, note.body))
+                }
             }
-            else {
 
+            for (note in homeViewModel.archivesList) {
+                dao.insertArchive(ArchivesEntity(itr++, note.head, note.body))
             }
         }
         super.onStop()

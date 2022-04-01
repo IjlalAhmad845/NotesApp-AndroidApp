@@ -13,4 +13,14 @@ interface EntityDao {
 
     @Query("Delete from notes_table")
     suspend fun deleteAllNotes()
+
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertArchive(archivesEntity: ArchivesEntity)
+
+    @Query("Select * from archives_table")
+    suspend fun getArchives(): MutableList<ArchivesEntity>
+
+    @Query("Delete from archives_table")
+    suspend fun deleteAllArchives()
 }

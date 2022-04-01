@@ -23,7 +23,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         get() = _displayNotesList
 
     private var _notesList: MutableList<Notes> = mutableListOf()
+    val notesList: MutableList<Notes>
+        get() = _notesList
     private var _archivesList: MutableList<Notes> = mutableListOf()
+    val archivesList: MutableList<Notes>
+        get() = _archivesList
 
 
     var actionMode: ActionMode? = null
@@ -43,6 +47,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
             _displayNotesList.clear()
             _displayNotesList.addAll(_notesList)
+
+            val archivesList = dao.getArchives()
+            for (note in archivesList) {
+                _archivesList.add(Notes(note.title, note.body, false))
+            }
         }
     }
 
