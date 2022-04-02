@@ -111,7 +111,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView13"
                 style="@style/ColorPickerColors"
-                app:cardBackgroundColor="@color/dark" />
+                app:cardBackgroundColor="@color/cyan" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView14"

@@ -22,7 +22,7 @@
     <color name="light_green">#7FBF5C</color>
     <color name="sky_blue">#4FD3E4</color>
     <color name="light">#858E8F</color>
-    <color name="dark">#2A2F30</color>
+    <color name="cyan">#00F7FF</color>
     <color name="light_purple">#BD97DD</color>
     <color name="red">#FF0000</color>
 </resources>

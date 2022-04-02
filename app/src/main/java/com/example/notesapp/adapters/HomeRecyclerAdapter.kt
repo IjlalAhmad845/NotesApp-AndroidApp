@@ -1,15 +1,13 @@
 package com.example.notesapp.adapters
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notesapp.R
 import com.example.notesapp.dataModels.Notes
@@ -45,6 +43,8 @@ class HomeRecyclerAdapter(
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private var noteCard = itemView.findViewById<CardView>(R.id.note_card)!!
+        private var noteCardLayout =
+            itemView.findViewById<ConstraintLayout>(R.id.note_card_layout)!!
         private var noteHeader = itemView.findViewById<TextView>(R.id.item_note_header_text_view)
         private var noteBody = itemView.findViewById<TextView>(R.id.item_note_body_text_view)
         private var noteSelected = itemView.findViewById<ImageView>(R.id.note_selected_icon)!!
@@ -57,11 +57,13 @@ class HomeRecyclerAdapter(
         /**================================================ METHOD FOR BINDING VIEWS ===================================================**/
         fun bind(holder: ViewHolder, note: Notes) {
 
+            val context = holder.noteCard.context
             holder.noteHeader.text = note.head
             holder.noteBody.text = note.body
             holder.noteSelected.visibility =
                 if (note.isSelected) {
-                    holder.noteCard.setBackgroundResource(R.drawable.note_selected_boundary)
+                    //setting background resource to constraint layout
+                    holder.noteCardLayout.setBackgroundResource(R.drawable.note_selected_boundary)
                     holder.noteSelected.setColorFilter(
                         ContextCompat.getColor(
                             holder.noteSelected.context,
@@ -70,42 +72,39 @@ class HomeRecyclerAdapter(
                     )
                     View.VISIBLE
                 } else {
-                    if (note.color == 0)
-                        holder.noteCard.setBackgroundResource(R.drawable.note_boundary)
-                    else {
-                        val unwrappedDrawable =
-                            AppCompatResources.getDrawable(
-                                holder.noteCard.context,
-                                R.drawable.note_background_resource
-                            )
-                        val wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable!!)
-                        DrawableCompat.setTint(
-                            wrappedDrawable,
-                            ContextCompat.getColor(
-                                holder.noteCard.context,
-                                when (note.color) {
-                                    1 -> R.color.dark_blue
-                                    2 -> R.color.orange
-                                    3 -> R.color.pink
-                                    4 -> R.color.purple
-                                    5 -> R.color.violet
-                                    6 -> R.color.green
-                                    7 -> R.color.olive
-                                    8 -> R.color.yellow
-                                    9 -> R.color.light_blue
-                                    10 -> R.color.light_green
-                                    11 -> R.color.light
-                                    12 -> R.color.dark
-                                    13 -> R.color.light_purple
-                                    14 -> R.color.red
-                                    else -> android.R.color.transparent
-                                }
-                            )
-                        )
-                        holder.noteCard.setBackgroundResource(R.drawable.note_background_resource)
-                    }
+                    //setting background resource to constraint layout
+                    holder.noteCardLayout.setBackgroundResource(R.drawable.note_boundary)
                     View.INVISIBLE
                 }
+
+            //setting background color to card view
+            holder.noteCard.setCardBackgroundColor(
+                ContextCompat.getColor(
+                    context,
+                    setNoteColor(note)
+                )
+            )
+        }
+
+        /**====================================== FUNCTION FOR SELECTING COLOR FOT NOTE ====================================== **/
+        private fun setNoteColor(note: Notes): Int {
+            return when (note.color) {
+                1 -> R.color.dark_blue
+                2 -> R.color.orange
+                3 -> R.color.pink
+                4 -> R.color.purple
+                5 -> R.color.violet
+                6 -> R.color.green
+                7 -> R.color.olive
+                8 -> R.color.yellow
+                9 -> R.color.light_blue
+                10 -> R.color.light_green
+                11 -> R.color.light
+                12 -> R.color.cyan
+                13 -> R.color.light_purple
+                14 -> R.color.red
+                else -> R.color.white
+            }
         }
 
 

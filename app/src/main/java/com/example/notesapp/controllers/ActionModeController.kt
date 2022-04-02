@@ -1,5 +1,6 @@
 package com.example.notesapp.controllers
 
+import android.text.Html
 import android.util.Log
 import android.view.*
 import androidx.databinding.DataBindingUtil
@@ -28,7 +29,7 @@ class ActionModeController(
 
             //changing archive icon when in archives section
             if (!isNotesSection)
-                p1!!.getItem(0).setIcon(R.drawable.ic_unarchive_note)
+                p1!!.findItem(R.id.contextual_archive).setIcon(R.drawable.ic_unarchive_note)
 
             return true
         }
@@ -313,68 +314,68 @@ class ActionModeController(
         val colorPicker = DataBindingUtil.bind<ColorPaletteBinding>(view)!!
 
         val dialog = MaterialAlertDialogBuilder(context)
-            .setTitle("Note Color")
+            .setTitle(Html.fromHtml("<h3><strong>Select Color</strong></h3>"))
             .setView(view)
             .show()
 
         colorPicker.cardView1.setOnClickListener {
-            setColor(indexList, model, adapter, 0);
+            setColor(indexList, model, adapter, 0)
             dialog.dismiss()
         }
         colorPicker.cardView2.setOnClickListener {
-            setColor(indexList, model, adapter, 1);
+            setColor(indexList, model, adapter, 1)
             dialog.dismiss()
         }
         colorPicker.cardView3.setOnClickListener {
-            setColor(indexList, model, adapter, 2);
+            setColor(indexList, model, adapter, 2)
             dialog.dismiss()
         }
         colorPicker.cardView4.setOnClickListener {
-            setColor(indexList, model, adapter, 3);
+            setColor(indexList, model, adapter, 3)
             dialog.dismiss()
         }
         colorPicker.cardView5.setOnClickListener {
-            setColor(indexList, model, adapter, 4);
+            setColor(indexList, model, adapter, 4)
             dialog.dismiss()
         }
         colorPicker.cardView6.setOnClickListener {
-            setColor(indexList, model, adapter, 5);
+            setColor(indexList, model, adapter, 5)
             dialog.dismiss()
         }
         colorPicker.cardView7.setOnClickListener {
-            setColor(indexList, model, adapter, 6);
+            setColor(indexList, model, adapter, 6)
             dialog.dismiss()
         }
         colorPicker.cardView8.setOnClickListener {
-            setColor(indexList, model, adapter, 7);
+            setColor(indexList, model, adapter, 7)
             dialog.dismiss()
         }
         colorPicker.cardView9.setOnClickListener {
-            setColor(indexList, model, adapter, 8);
+            setColor(indexList, model, adapter, 8)
             dialog.dismiss()
         }
         colorPicker.cardView10.setOnClickListener {
-            setColor(indexList, model, adapter, 9);
+            setColor(indexList, model, adapter, 9)
             dialog.dismiss()
         }
         colorPicker.cardView11.setOnClickListener {
-            setColor(indexList, model, adapter, 10);
+            setColor(indexList, model, adapter, 10)
             dialog.dismiss()
         }
         colorPicker.cardView12.setOnClickListener {
-            setColor(indexList, model, adapter, 11);
+            setColor(indexList, model, adapter, 11)
             dialog.dismiss()
         }
         colorPicker.cardView13.setOnClickListener {
-            setColor(indexList, model, adapter, 12);
+            setColor(indexList, model, adapter, 12)
             dialog.dismiss()
         }
         colorPicker.cardView14.setOnClickListener {
-            setColor(indexList, model, adapter, 13);
+            setColor(indexList, model, adapter, 13)
             dialog.dismiss()
         }
         colorPicker.cardView15.setOnClickListener {
-            setColor(indexList, model, adapter, 14);
+            setColor(indexList, model, adapter, 14)
             dialog.dismiss()
         }
     }
@@ -390,7 +391,6 @@ class ActionModeController(
             homeViewModel.setColor(i, color)
             adapter.notifyItemChanged(i)
         }
-        Log.d("ijlal", "$color")
     }
 }
 
