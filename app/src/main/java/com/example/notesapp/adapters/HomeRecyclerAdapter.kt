@@ -103,7 +103,7 @@ class HomeRecyclerAdapter(
                 12 -> R.color.cyan
                 13 -> R.color.light_purple
                 14 -> R.color.red
-                else -> R.color.white
+                else -> R.color.background_color
             }
         }
 

@@ -4,6 +4,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="action_mode_color">#B0BEC5</color>
+    <color name="toolbar_color">#D4D5DC</color>
     <color name="background_color">#FFFFFF</color>
     <color name="note_boundary">#1F1F20</color>
     <color name="note_selected_color">#1E2122</color>
