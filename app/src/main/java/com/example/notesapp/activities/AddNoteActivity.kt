@@ -26,7 +26,7 @@ class AddNoteActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddNoteBinding
     private var cardIndex = -1
-    private var color = -1;
+    private var color = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

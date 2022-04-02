@@ -1,7 +1,6 @@
 package com.example.notesapp.controllers
 
 import android.text.Html
-import android.util.Log
 import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
