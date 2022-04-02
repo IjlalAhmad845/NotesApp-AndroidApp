@@ -69,6 +69,10 @@ class ActionModeController(
 
                 deleteSnackBar(removedNoteIndexList, homeViewModel.selectedItems)
                 homeViewModel.selectedItems.clear()
+
+                //hiding placeholder view when no items left
+                if (homeViewModel.displayNotesList.size == 0)
+                    binding.homePlaceholder.visibility = View.VISIBLE
             }
             R.id.contextual_archive -> {
 
@@ -92,6 +96,10 @@ class ActionModeController(
                     binding
                 )
                 homeViewModel.selectedItems.clear()
+
+                //hiding placeholder view when no items left
+                if (homeViewModel.displayNotesList.size == 0)
+                    binding.homePlaceholder.visibility = View.VISIBLE
             }
         }
 
@@ -173,6 +181,9 @@ class ActionModeController(
                     snackBarMessage,
                     Snackbar.LENGTH_SHORT
                 ).show()
+
+                //showing placeholder view on UNDO
+                binding.homePlaceholder.visibility = View.GONE
             }
             .show()
     }
@@ -243,6 +254,9 @@ class ActionModeController(
                         homeViewModel.deleteFromNotes(notesMapList[item]!!)
 
                     adapter.notifyItemInserted(item)
+
+                    //showing placeholder view on UNDO
+                    binding.homePlaceholder.visibility = View.GONE
                 }
 
                 snackBarMessage = if (isNotesSection) {

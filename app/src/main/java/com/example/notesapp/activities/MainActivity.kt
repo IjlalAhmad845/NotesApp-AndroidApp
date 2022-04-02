@@ -21,6 +21,7 @@ import com.example.notesapp.database.NotesEntity
 import com.example.notesapp.databinding.ActivityMainBinding
 import com.example.notesapp.viewModels.HomeViewModel
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
@@ -49,6 +50,18 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
         //INITIALIZING RECYCLER VIEW
         adapter = HomeRecyclerAdapter(homeViewModel.displayNotesList, this)
         binding.homeRv.adapter = adapter
+
+        //PLACEHOLDER VIEW VISIBILITY CONTROL AFTER FETCHING NOTES COUNT FROM DATABASE
+        //BECAUSE IT TAKES TIME
+        lifecycleScope.launch(Dispatchers.IO) {
+            val notesCount = NotesDB.getDatabase(this@MainActivity).EntityDao().getNotes().size
+            //placeholder view
+            binding.homePlaceholder.visibility = if (notesCount == 0) View.VISIBLE else View.GONE
+        }
+
+        //setting text in placeholder view on start
+        binding.homePlaceholderTextView.text =
+            this.getString(R.string.home_placeholder_text, "Notes")
 
 
         //INITIALIZING NAVIGATION MENU
@@ -86,6 +99,8 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
                         0 -> addNewNote(noteTitle, noteBody)
                         1 -> archiveNewNote(noteTitle, noteBody)
                     }
+
+                    binding.homePlaceholder.visibility = View.GONE
                 }
             }
         }

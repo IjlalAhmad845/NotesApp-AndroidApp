@@ -72,6 +72,11 @@ class NavigationMenuController {
 
                             binding.homeToolbar.title = "Notes"
                             binding.homeFab.visibility = View.VISIBLE
+
+                            //changing contents of placeholder view
+                            binding.homePlaceholderImageView.setImageResource(R.drawable.ic_placeholder_note)
+                            binding.homePlaceholderTextView.text =
+                                context.getString(R.string.home_placeholder_text, "Notes")
                         }
                     }
                     R.id.nav_archives -> {
@@ -85,12 +90,21 @@ class NavigationMenuController {
 
                             binding.homeToolbar.title = "Archives"
                             binding.homeFab.visibility = View.GONE
+
+                            //changing contents of placeholder view
+                            binding.homePlaceholderImageView.setImageResource(R.drawable.ic_archive_note)
+                            binding.homePlaceholderTextView.text =
+                                context.getString(R.string.home_placeholder_text, "Archives")
                         }
                     }
                     R.id.action_theme -> {
                         switchMaterial.isChecked = !switchMaterial.isChecked
                     }
                 }
+
+                //placeholder view visibility control based on section
+                binding.homePlaceholder.visibility =
+                    if (homeViewModel.displayNotesList.size == 0) View.VISIBLE else View.GONE
 
                 if (it.itemId != R.id.action_theme)
                     binding.homeDrawer.closeDrawer(GravityCompat.START)
