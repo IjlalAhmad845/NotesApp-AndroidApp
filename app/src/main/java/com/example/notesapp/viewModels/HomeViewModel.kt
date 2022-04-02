@@ -2,10 +2,8 @@ package com.example.notesapp.viewModels
 
 import android.app.Application
 import android.view.ActionMode
-import android.view.View
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-
 import com.example.notesapp.dataModels.Notes
 import com.example.notesapp.database.NotesDB
 import kotlinx.coroutines.Dispatchers

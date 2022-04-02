@@ -9,13 +9,15 @@
         <entry key="..\:/Projects/Android Studio Projects/Practice/NotesApp/app/src/main/res/drawable/note_boundary.xml" value="0.255" />
         <entry key="..\:/Projects/Android Studio Projects/Practice/NotesApp/app/src/main/res/drawable/note_selected_boundary.xml" value="0.2555" />
         <entry key="..\:/Projects/Android Studio Projects/Practice/NotesApp/app/src/main/res/drawable/toolbar_drawable.xml" value="0.124" />
-        <entry key="..\:/Projects/Android Studio Projects/Practice/NotesApp/app/src/main/res/layout/activity_add_note.xml" value="0.25" />
+        <entry key="..\:/Projects/Android Studio Projects/Practice/NotesApp/app/src/main/res/layout/activity_add_note.xml" value="0.24351851851851852" />
         <entry key="..\:/Projects/Android Studio Projects/Practice/NotesApp/app/src/main/res/layout/activity_add_note_acitivity.xml" value="0.25" />
         <entry key="..\:/Projects/Android Studio Projects/Practice/NotesApp/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Projects/Android Studio Projects/Practice/NotesApp/app/src/main/res/layout/color_palette.xml" value="0.25416666666666665" />
         <entry key="..\:/Projects/Android Studio Projects/Practice/NotesApp/app/src/main/res/layout/header_nav_drawer.xml" value="0.25" />
         <entry key="..\:/Projects/Android Studio Projects/Practice/NotesApp/app/src/main/res/layout/item_note.xml" value="0.4" />
         <entry key="..\:/Projects/Android Studio Projects/Practice/NotesApp/app/src/main/res/menu/contextual_menu.xml" value="0.25" />
         <entry key="..\:/Projects/Android Studio Projects/Practice/NotesApp/app/src/main/res/menu/menu_contextual.xml" value="0.25416666666666665" />
+        <entry key="..\:/Projects/Android Studio Projects/Practice/NotesApp/app/src/main/res/menu/menu_home.xml" value="0.25416666666666665" />
         <entry key="..\:/Projects/Android Studio Projects/Practice/NotesApp/app/src/main/res/menu/menu_home_nav.xml" value="0.25416666666666665" />
         <entry key="..\:/Projects/Android Studio Projects/Practice/NotesApp/app/src/main/res/menu/nav_menu.xml" value="0.25" />
         <entry key="..\:/Projects/Android Studio Projects/Practice/NotesApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.124" />

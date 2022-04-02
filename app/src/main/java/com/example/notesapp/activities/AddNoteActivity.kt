@@ -5,10 +5,12 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import androidx.databinding.DataBindingUtil
 import com.example.notesapp.R
 import com.example.notesapp.databinding.ActivityAddNoteBinding
 import com.example.notesapp.viewModels.HomeViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class AddNoteActivity : AppCompatActivity() {
     companion object {
@@ -33,9 +35,8 @@ class AddNoteActivity : AppCompatActivity() {
 
 
         getNote()
-        binding.noteBackButton.setOnClickListener {
-            sendDataBack(0)
-        }
+        binding.noteBackButton.setOnClickListener { sendDataBack(0) }
+        binding.noteColor.setOnClickListener { colorPicker() }
     }
 
     /**============================================ METHOD FOR GETTING  FROM INTENT ===========================================**/
@@ -81,6 +82,15 @@ class AddNoteActivity : AppCompatActivity() {
 
         setResult(Activity.RESULT_OK, data)
         super.onBackPressed()
+    }
+
+    private fun colorPicker()
+    {
+//        val view = LayoutInflater.from(this).inflate(R.layout.color_palette,)
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Color Picker")
+                .setView(R.layout.color_palette)
+                .show()
     }
 
     /**======================================================= ON BACK PRESSED =======================================================**/
