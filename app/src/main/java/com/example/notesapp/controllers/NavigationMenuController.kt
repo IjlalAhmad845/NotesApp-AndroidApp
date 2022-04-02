@@ -1,13 +1,19 @@
 package com.example.notesapp.controllers
 
 import android.app.Activity
+import android.content.Context
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.GravityCompat
 import com.example.notesapp.R
 import com.example.notesapp.adapters.HomeRecyclerAdapter
+import com.example.notesapp.database.Preferences
 import com.example.notesapp.databinding.ActivityMainBinding
 import com.example.notesapp.viewModels.HomeViewModel
+import com.google.android.material.switchmaterial.SwitchMaterial
+
 
 class NavigationMenuController {
     companion object {
@@ -33,16 +39,23 @@ class NavigationMenuController {
 
             //setting toolbar title (considering screen rotation)
             binding.homeToolbar.title = if (homeViewModel.isNotesSection) "Notes" else "Archives"
-
-            navItemClickListener(binding, homeViewModel, adapter)
+            navItemClickListener(context, binding, homeViewModel, adapter)
         }
 
         /**======================================= FUNCTION FOR HANDLING NAV ITEMS CLICKS =========================================**/
         private fun navItemClickListener(
+            context: Context,
             binding: ActivityMainBinding,
             homeViewModel: HomeViewModel,
             adapter: HomeRecyclerAdapter
         ) {
+            //Handling dark theme menu item
+            //Handling dark theme menu item
+            val switchMaterial: SwitchMaterial = setDarkThemeMenuItem(
+                context,
+                binding.homeNavigationView.menu.findItem(R.id.action_theme)
+            )
+
             binding.homeNavigationView.setNavigationItemSelectedListener {
 
                 when (it.itemId) {
@@ -81,6 +94,34 @@ class NavigationMenuController {
 
                 true
             }
+        }
+
+        /**
+         * ======================================= METHOD FOR HANDLING DARK THEME MENU ITEM ==================================
+         */
+        private fun setDarkThemeMenuItem(context: Context?, menuItem: MenuItem): SwitchMaterial {
+            menuItem.actionView = SwitchMaterial(context!!)
+            val switchMaterial = menuItem.actionView as SwitchMaterial
+
+            //getting last saved state of dark theme
+            val isDarkEnabled = Preferences.getThemeState(context)
+
+            //applying changes
+            switchMaterial.isChecked = isDarkEnabled
+            if (isDarkEnabled) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) else AppCompatDelegate.setDefaultNightMode(
+                AppCompatDelegate.MODE_NIGHT_NO
+            )
+
+            //click listener for dark theme switch
+            switchMaterial.setOnCheckedChangeListener { _, b: Boolean ->
+                if (b) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) else AppCompatDelegate.setDefaultNightMode(
+                    AppCompatDelegate.MODE_NIGHT_NO
+                )
+
+                //saving theme state in Shared Preferences
+                Preferences.saveThemeState(context, b)
+            }
+            return switchMaterial
         }
 
     } //End Companion Object
