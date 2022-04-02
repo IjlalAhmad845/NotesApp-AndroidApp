@@ -46,11 +46,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
             //adding to notes list
             for (note in notesList) {
-                _notesList.add(Notes(note.title, note.body, false,0))
+                _notesList.add(Notes(note.title, note.body, false, note.color))
             }
             //adding to archives list
             for (note in archivesList) {
-                _archivesList.add(Notes(note.title, note.body, false,0))
+                _archivesList.add(Notes(note.title, note.body, false, note.color))
             }
 
             //setting notes to display list

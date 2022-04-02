@@ -334,19 +334,19 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
             var itr = 0
             if (binding.homeToolbar.title == "Notes") {
                 for (note in homeViewModel.displayNotesList) {
-                    dao.insertNote(NotesEntity(itr++, note.head, note.body))
+                    dao.insertNote(NotesEntity(itr++, note.head, note.body, note.color))
                 }
                 itr = 0
                 for (note in homeViewModel.archivesList) {
-                    dao.insertArchive(ArchivesEntity(itr++, note.head, note.body))
+                    dao.insertArchive(ArchivesEntity(itr++, note.head, note.body, note.color))
                 }
             } else {
                 for (note in homeViewModel.displayNotesList) {
-                    dao.insertArchive(ArchivesEntity(itr++, note.head, note.body))
+                    dao.insertArchive(ArchivesEntity(itr++, note.head, note.body, note.color))
                 }
                 itr = 0
                 for (note in homeViewModel.notesList) {
-                    dao.insertNote(NotesEntity(itr++, note.head, note.body))
+                    dao.insertNote(NotesEntity(itr++, note.head, note.body, note.color))
                 }
             }
         }

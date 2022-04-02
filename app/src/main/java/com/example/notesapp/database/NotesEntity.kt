@@ -8,5 +8,6 @@ data class NotesEntity(
     @PrimaryKey
     val id: Int,
     val title: String,
-    val body: String
+    val body: String,
+    var color: Int
 )
