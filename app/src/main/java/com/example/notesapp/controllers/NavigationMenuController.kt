@@ -87,6 +87,9 @@ class NavigationMenuController {
                             binding.homeFab.visibility = View.GONE
                         }
                     }
+                    R.id.action_theme -> {
+                        switchMaterial.isChecked = !switchMaterial.isChecked
+                    }
                 }
 
                 if (it.itemId != R.id.action_theme)
@@ -108,14 +111,14 @@ class NavigationMenuController {
 
             //applying changes
             switchMaterial.isChecked = isDarkEnabled
-            if (isDarkEnabled) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) else AppCompatDelegate.setDefaultNightMode(
-                AppCompatDelegate.MODE_NIGHT_NO
+            AppCompatDelegate.setDefaultNightMode(
+                if (isDarkEnabled) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
             )
 
             //click listener for dark theme switch
             switchMaterial.setOnCheckedChangeListener { _, b: Boolean ->
-                if (b) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) else AppCompatDelegate.setDefaultNightMode(
-                    AppCompatDelegate.MODE_NIGHT_NO
+                AppCompatDelegate.setDefaultNightMode(
+                    if (b) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
                 )
 
                 //saving theme state in Shared Preferences
