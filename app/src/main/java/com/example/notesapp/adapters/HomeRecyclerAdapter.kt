@@ -71,7 +71,7 @@ class HomeRecyclerAdapter(
         /**============================================================== ON CLICK =========================================================**/
         private fun handleOnClick() {
             noteCard.setOnClickListener {
-//                cardOnClickInterface.cardOnClick(adapterPosition)
+                cardOnClickInterface.cardOnClick(adapterPosition)
             }
         }
 
