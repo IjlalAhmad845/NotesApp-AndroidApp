@@ -4,12 +4,15 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.notesapp.R
 import com.example.notesapp.adapters.HomeRecyclerAdapter
 import com.example.notesapp.controllers.ActionModeController
@@ -18,6 +21,7 @@ import com.example.notesapp.dataModels.Notes
 import com.example.notesapp.database.ArchivesEntity
 import com.example.notesapp.database.NotesDB
 import com.example.notesapp.database.NotesEntity
+import com.example.notesapp.database.Preferences
 import com.example.notesapp.databinding.ActivityMainBinding
 import com.example.notesapp.viewModels.HomeViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -43,11 +47,16 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
         binding.homeFab.setOnClickListener {
             startAddNoteActivity()
         }
+
+        binding.layoutControlBtn.setOnClickListener {
+            switchLayout()
+        }
     }
 
     /**================================== METHOD FOR INITIALIZING TOOLBAR AND RECYCLER VIEW ==================================**/
     private fun init() {
         //INITIALIZING RECYCLER VIEW
+        switchLayout()
         adapter = HomeRecyclerAdapter(homeViewModel.displayNotesList, this)
         binding.homeRv.adapter = adapter
 
@@ -81,6 +90,28 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
         }
     }
 
+    /**================================= METHOD FOR SWITCHING RECYCLER VIEW LAYOUT ==================================**/
+    private fun switchLayout() {
+        //getting layout state
+        val isLinearLayout = Preferences.getLayoutState(this)
+
+        //saving inverse state
+        Preferences.saveLayoutState(
+            this,
+            !isLinearLayout
+        )
+
+        //setting icon
+        binding.layoutControlBtn.setImageResource(
+            if (isLinearLayout) R.drawable.ic_linear_layout else R.drawable.ic_staggered_layout
+        )
+
+        //setting layout in recycler view
+        if (isLinearLayout)
+            binding.homeRv.layoutManager = LinearLayoutManager(this)
+        else
+            binding.homeRv.layoutManager = StaggeredGridLayoutManager(2, LinearLayout.VERTICAL)
+    }
 
     /**========================================== CALLBACK FOR RECEIVING NEW NOTE =================================================**/
     private var addNoteCallback =

@@ -27,6 +27,26 @@ class Preferences {
                 context.getSharedPreferences(SHARED_PREFERENCE_FILE, Context.MODE_PRIVATE)
             return sharedPreferences.getBoolean("ThemeState", false)
         }
+
+        /**
+         * ========================================== FUNCTION FOR SAVING APP'S THEME STATE ========================================
+         */
+        fun saveLayoutState(context: Context, isLinearLayout: Boolean) {
+            sharedPreferences =
+                context.getSharedPreferences(SHARED_PREFERENCE_FILE, Context.MODE_PRIVATE)
+            val editor: SharedPreferences.Editor = sharedPreferences.edit()
+            editor.putBoolean("LayoutState", isLinearLayout)
+            editor.apply()
+        }
+
+        /**
+         * =========================================== FUNCTION FOR GETTING APP'S THEME STATE =======================================
+         */
+        fun getLayoutState(context: Context): Boolean {
+            sharedPreferences =
+                context.getSharedPreferences(SHARED_PREFERENCE_FILE, Context.MODE_PRIVATE)
+            return sharedPreferences.getBoolean("LayoutState", true)
+        }
     }
 
 }
