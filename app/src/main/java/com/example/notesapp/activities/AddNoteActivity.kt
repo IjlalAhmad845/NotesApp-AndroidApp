@@ -5,7 +5,12 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
+import android.widget.AdapterView
+import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import com.example.notesapp.R
 import com.example.notesapp.databinding.ActivityAddNoteBinding
@@ -28,6 +33,7 @@ class AddNoteActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddNoteBinding
     private var cardIndex = -1
+    private var color: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,12 +90,44 @@ class AddNoteActivity : AppCompatActivity() {
         super.onBackPressed()
     }
 
-    private fun colorPicker()
-    {
-            MaterialAlertDialogBuilder(this)
-                .setTitle("Color Picker")
-                .setView(R.layout.color_palette)
-                .show()
+    private fun colorPicker() {
+        val view = LayoutInflater.from(this).inflate(R.layout.color_palette, null)
+
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setTitle("Note Picker")
+            .setView(view)
+            .show()
+
+        view.findViewById<CardView>(R.id.cardView1)
+            .setOnClickListener { color = 1; dialog.dismiss() }
+        view.findViewById<CardView>(R.id.cardView2)
+            .setOnClickListener { color = 2; dialog.dismiss() }
+        view.findViewById<CardView>(R.id.cardView3)
+            .setOnClickListener { color = 3; dialog.dismiss() }
+        view.findViewById<CardView>(R.id.cardView4)
+            .setOnClickListener { color = 4; dialog.dismiss() }
+        view.findViewById<CardView>(R.id.cardView5)
+            .setOnClickListener { color = 5; dialog.dismiss() }
+        view.findViewById<CardView>(R.id.cardView6)
+            .setOnClickListener { color = 6; dialog.dismiss() }
+        view.findViewById<CardView>(R.id.cardView7)
+            .setOnClickListener { color = 7; dialog.dismiss() }
+        view.findViewById<CardView>(R.id.cardView8)
+            .setOnClickListener { color = 8; dialog.dismiss() }
+        view.findViewById<CardView>(R.id.cardView9)
+            .setOnClickListener { color = 9; dialog.dismiss() }
+        view.findViewById<CardView>(R.id.cardView10)
+            .setOnClickListener { color = 10; dialog.dismiss() }
+        view.findViewById<CardView>(R.id.cardView11)
+            .setOnClickListener { color = 11; dialog.dismiss() }
+        view.findViewById<CardView>(R.id.cardView12)
+            .setOnClickListener { color = 12; dialog.dismiss() }
+        view.findViewById<CardView>(R.id.cardView13)
+            .setOnClickListener { color = 13; dialog.dismiss() }
+        view.findViewById<CardView>(R.id.cardView14)
+            .setOnClickListener { color = 14; dialog.dismiss() }
+        view.findViewById<CardView>(R.id.cardView15)
+            .setOnClickListener { color = 15; dialog.dismiss() }
     }
 
     /**======================================================= ON BACK PRESSED =======================================================**/
