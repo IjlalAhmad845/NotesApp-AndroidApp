@@ -86,7 +86,6 @@ class AddNoteActivity : AppCompatActivity() {
 
     private fun colorPicker()
     {
-//        val view = LayoutInflater.from(this).inflate(R.layout.color_palette,)
             MaterialAlertDialogBuilder(this)
                 .setTitle("Color Picker")
                 .setView(R.layout.color_palette)

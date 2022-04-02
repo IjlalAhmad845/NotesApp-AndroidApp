@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        style="@style/ColorPickerLayouts"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView1"
+            style="@style/ColorPickerColors">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_no_color"
+                tools:ignore="ContentDescription" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView2"
+
+            style="@style/ColorPickerColors"
+            app:cardBackgroundColor="@color/dark_blue" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView3"
+            style="@style/ColorPickerColors"
+            app:cardBackgroundColor="@color/orange" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView4"
+            style="@style/ColorPickerColors"
+            app:cardBackgroundColor="@color/pink" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView5"
+            style="@style/ColorPickerColors"
+            app:cardBackgroundColor="@color/purple" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout1">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView6"
+            style="@style/ColorPickerColors"
+            app:cardBackgroundColor="@color/violet" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView7"
+            style="@style/ColorPickerColors"
+            app:cardBackgroundColor="@color/green" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView8"
+            style="@style/ColorPickerColors"
+            app:cardBackgroundColor="@color/olive" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView9"
+            style="@style/ColorPickerColors"
+            app:cardBackgroundColor="@color/yellow" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView10"
+            style="@style/ColorPickerColors"
+            app:cardBackgroundColor="@color/light_blue" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView11"
+            style="@style/ColorPickerColors"
+            app:cardBackgroundColor="@color/light_green" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView12"
+            style="@style/ColorPickerColors"
+            app:cardBackgroundColor="@color/light" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView13"
+            style="@style/ColorPickerColors"
+            app:cardBackgroundColor="@color/dark" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView14"
+            style="@style/ColorPickerColors"
+            app:cardBackgroundColor="@color/light_purple" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView15"
+            style="@style/ColorPickerColors"
+            app:cardBackgroundColor="@color/red" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
