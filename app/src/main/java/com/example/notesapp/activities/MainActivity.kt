@@ -210,14 +210,14 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
 
     /**=================================== METHOD FOR ADDING NEW NOTE TO DISPLAY LIST =====================================**/
     private fun addNewNote(noteTitle: String, noteBody: String) {
-        homeViewModel.addDisplayNote(Notes(noteTitle, noteBody, false))
+        homeViewModel.addDisplayNote(Notes(noteTitle, noteBody, false,0))
         adapter.notifyItemInserted(homeViewModel.displayNotesList.size)
     }
 
     /**========================================= METHOD FOR EDIT  NOTE OF DISPLAY LIST ========================================**/
     private fun editNote(noteTitle: String, noteBody: String, noteIndex: Int) {
         homeViewModel.editDisplayNote(
-            Notes(noteTitle, noteBody, false),
+            Notes(noteTitle, noteBody, false,0),
             noteIndex
         )
         adapter.notifyItemChanged(noteIndex)
@@ -242,7 +242,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
 
     /**===================================== METHOD FOR FOR HANDLING ARCHIVE SNACK BAR =====================================**/
     private fun archiveSnackBar(noteTitle: String, noteBody: String) {
-        val note = Notes(noteTitle, noteBody, false)
+        val note = Notes(noteTitle, noteBody, false,0)
         val isNoteSection = binding.homeToolbar.title == "Notes"
 
         //ARCHIVING OR UnARCHIVING Based on Section

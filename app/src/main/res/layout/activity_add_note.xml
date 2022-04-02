@@ -23,19 +23,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/note_color"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:contentDescription="@string/desc_color_picker"
-            android:focusable="true"
-            android:padding="10dp"
-            android:src="@drawable/ic_color_palette"
-            app:layout_constraintEnd_toStartOf="@+id/note_archive_button"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
             android:id="@+id/note_archive_button"
             android:layout_width="48dp"
             android:layout_height="48dp"
