@@ -15,6 +15,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         const val NOTE_BODY_KEY = "com.example.notesapp.activities.note_body_key"
         const val NOTE_INDEX_KEY = "com.example.notesapp.activities.note_index_key"
         const val NOTE_TYPE_KEY = "com.example.notesapp.activities.note_type_key"
+        const val NOTE_COLOR_KEY = "com.example.notesapp.activities.note_color_key"
     }
 
     private var _displayNotesList: MutableList<Notes> = mutableListOf()

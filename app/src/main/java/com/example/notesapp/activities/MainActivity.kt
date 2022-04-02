@@ -115,13 +115,15 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
                 val noteOperation =
                     it.data?.getIntExtra(AddNoteActivity.SEND_BACK_NOTE_OPERATION_KEY, -1)
 
+                val noteColor = it.data?.getIntExtra(AddNoteActivity.SEND_BACK_COLOR_KEY, -1)!!
+
                 noteTitle = noteTitle!!.trim()
                 noteBody = noteBody!!.trim()
 
                 if (!noteTitle.isNullOrEmpty() || !noteBody.isNullOrEmpty()) {
                     when (noteOperation) {
                         //simply edit that note
-                        0 -> editNote(noteTitle, noteBody, noteIndex)
+                        0 -> editNote(noteTitle, noteBody, noteIndex, noteColor)
 
                         //archive that note
                         1 -> archiveAndUnArchiveNote(noteIndex, noteTitle, noteBody)
@@ -158,6 +160,10 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
                 .putExtra(
                     HomeViewModel.NOTE_BODY_KEY,
                     homeViewModel.displayNotesList[position].body
+                )
+                .putExtra(
+                    HomeViewModel.NOTE_COLOR_KEY,
+                    homeViewModel.displayNotesList[position].color
                 )
                 .putExtra(HomeViewModel.NOTE_INDEX_KEY, position)
                 .putExtra(
@@ -210,14 +216,14 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
 
     /**=================================== METHOD FOR ADDING NEW NOTE TO DISPLAY LIST =====================================**/
     private fun addNewNote(noteTitle: String, noteBody: String) {
-        homeViewModel.addDisplayNote(Notes(noteTitle, noteBody, false,0))
+        homeViewModel.addDisplayNote(Notes(noteTitle, noteBody, false, 0))
         adapter.notifyItemInserted(homeViewModel.displayNotesList.size)
     }
 
     /**========================================= METHOD FOR EDIT  NOTE OF DISPLAY LIST ========================================**/
-    private fun editNote(noteTitle: String, noteBody: String, noteIndex: Int) {
+    private fun editNote(noteTitle: String, noteBody: String, noteIndex: Int, noteColor: Int) {
         homeViewModel.editDisplayNote(
-            Notes(noteTitle, noteBody, false,0),
+            Notes(noteTitle, noteBody, false, noteColor),
             noteIndex
         )
         adapter.notifyItemChanged(noteIndex)
@@ -242,7 +248,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
 
     /**===================================== METHOD FOR FOR HANDLING ARCHIVE SNACK BAR =====================================**/
     private fun archiveSnackBar(noteTitle: String, noteBody: String) {
-        val note = Notes(noteTitle, noteBody, false,0)
+        val note = Notes(noteTitle, noteBody, false, 0)
         val isNoteSection = binding.homeToolbar.title == "Notes"
 
         //ARCHIVING OR UnARCHIVING Based on Section

@@ -14,6 +14,7 @@ class AddNoteActivity : AppCompatActivity() {
         const val SEND_BACK_TITLE_KEY = "com.example.notesapp.activities.sendTitleBack"
         const val SEND_BACK_BODY_KEY = "com.example.notesapp.activities.sendBodyBack"
         const val SEND_BACK_INDEX_KEY = "com.example.notesapp.activities.sendIndexBack"
+        const val SEND_BACK_COLOR_KEY = "com.example.notesapp.activities.sendColorBack"
 
         /*
          * 0 for just adding note to display list
@@ -25,6 +26,7 @@ class AddNoteActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddNoteBinding
     private var cardIndex = -1
+    private var color = -1;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,8 +44,9 @@ class AddNoteActivity : AppCompatActivity() {
         val data = intent
         val noteTitle = data.getStringExtra(HomeViewModel.NOTE_TITLE_KEY)
         val noteBody = data.getStringExtra(HomeViewModel.NOTE_BODY_KEY)
-        val position = data.getIntExtra(HomeViewModel.NOTE_INDEX_KEY, -1)
+        val noteIndex = data.getIntExtra(HomeViewModel.NOTE_INDEX_KEY, -1)
         val noteType = data.getIntExtra(HomeViewModel.NOTE_TYPE_KEY, -1)
+        val noteColor = data.getIntExtra(HomeViewModel.NOTE_COLOR_KEY, -1)
 
         //and text will be empty for empty intent
         binding.noteHeaderTextView.setText(noteTitle)
@@ -59,7 +62,8 @@ class AddNoteActivity : AppCompatActivity() {
             else sendDataBack(2)
         }
 
-        cardIndex = position
+        cardIndex = noteIndex
+        color = noteColor
     }
 
     /**================================== METHOD FOR SENDING DATA BACK TO HOME ACTIVITY ==================================**/
@@ -75,6 +79,8 @@ class AddNoteActivity : AppCompatActivity() {
 
         if (cardIndex != -1)
             data.putExtra(SEND_BACK_INDEX_KEY, cardIndex)
+
+        data.putExtra(SEND_BACK_COLOR_KEY, color)
 
         setResult(Activity.RESULT_OK, data)
         super.onBackPressed()
