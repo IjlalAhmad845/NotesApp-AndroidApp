@@ -1,16 +1,19 @@
 package com.example.notesapp.adapters
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.cardview.widget.CardView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notesapp.R
 import com.example.notesapp.dataModels.Notes
+
 
 class HomeRecyclerAdapter(
     private var notesList: MutableList<Notes>,
@@ -59,10 +62,48 @@ class HomeRecyclerAdapter(
             holder.noteSelected.visibility =
                 if (note.isSelected) {
                     holder.noteCard.setBackgroundResource(R.drawable.note_selected_boundary)
-                    holder.noteSelected.setColorFilter(ContextCompat.getColor(holder.noteSelected.context,R.color.note_selected_color))
+                    holder.noteSelected.setColorFilter(
+                        ContextCompat.getColor(
+                            holder.noteSelected.context,
+                            R.color.note_selected_color
+                        )
+                    )
                     View.VISIBLE
                 } else {
-                    holder.noteCard.setBackgroundResource(R.drawable.note_boundary)
+                    if (note.color == 0)
+                        holder.noteCard.setBackgroundResource(R.drawable.note_boundary)
+                    else {
+                        val unwrappedDrawable =
+                            AppCompatResources.getDrawable(
+                                holder.noteCard.context,
+                                R.drawable.note_background_resource
+                            )
+                        val wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable!!)
+                        DrawableCompat.setTint(
+                            wrappedDrawable,
+                            ContextCompat.getColor(
+                                holder.noteCard.context,
+                                when (note.color) {
+                                    1 -> R.color.dark_blue
+                                    2 -> R.color.orange
+                                    3 -> R.color.pink
+                                    4 -> R.color.purple
+                                    5 -> R.color.violet
+                                    6 -> R.color.green
+                                    7 -> R.color.olive
+                                    8 -> R.color.yellow
+                                    9 -> R.color.light_blue
+                                    10 -> R.color.light_green
+                                    11 -> R.color.light
+                                    12 -> R.color.dark
+                                    13 -> R.color.light_purple
+                                    14 -> R.color.red
+                                    else -> android.R.color.transparent
+                                }
+                            )
+                        )
+                        holder.noteCard.setBackgroundResource(R.drawable.note_background_resource)
+                    }
                     View.INVISIBLE
                 }
         }

@@ -45,11 +45,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
             //adding to notes list
             for (note in notesList) {
-                _notesList.add(Notes(note.title, note.body, false))
+                _notesList.add(Notes(note.title, note.body, false,0))
             }
             //adding to archives list
             for (note in archivesList) {
-                _archivesList.add(Notes(note.title, note.body, false))
+                _archivesList.add(Notes(note.title, note.body, false,0))
             }
 
             //setting notes to display list
@@ -98,9 +98,14 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         _notesList.remove(note)
     }
 
-    /**==================================== FUNCTION FOR TOGGLING  SELECTION IN NOTES LIST ====================================**/
+    /**==================================== FUNCTION FOR TOGGLING  SELECTION IN NOTES LIST ================================**/
     fun setSelected(index: Int, isSelected: Boolean) {
         _displayNotesList[index].isSelected = isSelected
+    }
+
+    /**========================================== FUNCTION FOR SETTING COLOR TO NOTES =======================================**/
+    fun setColor(index: Int, color: Int) {
+        _displayNotesList[index].color = color
     }
 
     /**===================================== FUNCTION FOR SWITCHING  NOTES TO ARCHIVES ======================================**/

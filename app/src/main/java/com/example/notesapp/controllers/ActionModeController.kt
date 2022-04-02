@@ -1,15 +1,16 @@
 package com.example.notesapp.controllers
 
-import android.view.ActionMode
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.util.Log
+import android.view.*
+import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.notesapp.R
 import com.example.notesapp.adapters.HomeRecyclerAdapter
 import com.example.notesapp.dataModels.Notes
 import com.example.notesapp.databinding.ActivityMainBinding
+import com.example.notesapp.databinding.ColorPaletteBinding
 import com.example.notesapp.viewModels.HomeViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 
 class ActionModeController(
@@ -100,6 +101,19 @@ class ActionModeController(
                 //hiding placeholder view when no items left
                 if (homeViewModel.displayNotesList.size == 0)
                     binding.homePlaceholder.visibility = View.VISIBLE
+            }
+            R.id.contextual_color -> {
+                //filling index list first, cause notes list size will vary when deleting notes
+                for (item in homeViewModel.selectedItems) {
+                    removedNoteIndex = homeViewModel.displayNotesList.indexOf(item)
+                    removedNoteIndexList.add(removedNoteIndex)
+                }
+
+                colorPicker(
+                    removedNoteIndexList,
+                    homeViewModel,
+                    adapter
+                )
             }
         }
 
@@ -284,6 +298,99 @@ class ActionModeController(
             override fun onDrawerClosed(drawerView: View) {}
             override fun onDrawerStateChanged(newState: Int) {}
         })
+    }
+
+    /**=========================================== METHOD FOR INFLATE COLOR PICKER =============================================**/
+    private fun colorPicker(
+        indexList: MutableList<Int>,
+        model: HomeViewModel,
+        adapter: HomeRecyclerAdapter
+    ) {
+        val context = this.binding.homeRootLayout.context
+        val view = LayoutInflater.from(context)
+            .inflate(R.layout.color_palette, null)
+
+        val colorPicker = DataBindingUtil.bind<ColorPaletteBinding>(view)!!
+
+        val dialog = MaterialAlertDialogBuilder(context)
+            .setTitle("Note Color")
+            .setView(view)
+            .show()
+
+        colorPicker.cardView1.setOnClickListener {
+            setColor(indexList, model, adapter, 0);
+            dialog.dismiss()
+        }
+        colorPicker.cardView2.setOnClickListener {
+            setColor(indexList, model, adapter, 1);
+            dialog.dismiss()
+        }
+        colorPicker.cardView3.setOnClickListener {
+            setColor(indexList, model, adapter, 2);
+            dialog.dismiss()
+        }
+        colorPicker.cardView4.setOnClickListener {
+            setColor(indexList, model, adapter, 3);
+            dialog.dismiss()
+        }
+        colorPicker.cardView5.setOnClickListener {
+            setColor(indexList, model, adapter, 4);
+            dialog.dismiss()
+        }
+        colorPicker.cardView6.setOnClickListener {
+            setColor(indexList, model, adapter, 5);
+            dialog.dismiss()
+        }
+        colorPicker.cardView7.setOnClickListener {
+            setColor(indexList, model, adapter, 6);
+            dialog.dismiss()
+        }
+        colorPicker.cardView8.setOnClickListener {
+            setColor(indexList, model, adapter, 7);
+            dialog.dismiss()
+        }
+        colorPicker.cardView9.setOnClickListener {
+            setColor(indexList, model, adapter, 8);
+            dialog.dismiss()
+        }
+        colorPicker.cardView10.setOnClickListener {
+            setColor(indexList, model, adapter, 9);
+            dialog.dismiss()
+        }
+        colorPicker.cardView11.setOnClickListener {
+            setColor(indexList, model, adapter, 10);
+            dialog.dismiss()
+        }
+        colorPicker.cardView12.setOnClickListener {
+            setColor(indexList, model, adapter, 11);
+            dialog.dismiss()
+        }
+        colorPicker.cardView13.setOnClickListener {
+            setColor(indexList, model, adapter, 12);
+            dialog.dismiss()
+        }
+        colorPicker.cardView14.setOnClickListener {
+            setColor(indexList, model, adapter, 13);
+            dialog.dismiss()
+        }
+        colorPicker.cardView15.setOnClickListener {
+            setColor(indexList, model, adapter, 14);
+            dialog.dismiss()
+        }
+    }
+
+    /**=============================== METHOD FOR SETTING NOTES COLOR ON SELECTED NOTES ==============================**/
+    private fun setColor(
+        removedNoteIndexList: MutableList<Int>,
+        homeViewModel: HomeViewModel,
+        adapter: HomeRecyclerAdapter,
+        color: Int
+    ) {
+        for (i in removedNoteIndexList) {
+            homeViewModel.setColor(i, color)
+            adapter.notifyItemChanged(i)
+        }
+        Log.d("ijlal", "$color")
     }
 }
 
