@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -40,7 +41,7 @@ class HomeRecyclerAdapter(
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private var noteCard = itemView.findViewById<ConstraintLayout>(R.id.note_card)!!
+        private var noteCard = itemView.findViewById<CardView>(R.id.note_card)!!
         private var noteHeader = itemView.findViewById<TextView>(R.id.item_note_header_text_view)
         private var noteBody = itemView.findViewById<TextView>(R.id.item_note_body_text_view)
         private var noteSelected = itemView.findViewById<ImageView>(R.id.note_selected_icon)!!
@@ -61,22 +62,16 @@ class HomeRecyclerAdapter(
                     holder.noteSelected.setColorFilter(ContextCompat.getColor(holder.noteSelected.context,R.color.note_selected_color))
                     View.VISIBLE
                 } else {
-                    holder.noteCard.setBackgroundResource(android.R.color.transparent)
+                    holder.noteCard.setBackgroundResource(R.drawable.note_boundary)
                     View.INVISIBLE
                 }
-
-            if (note.isSelected)
-                holder.noteCard.setBackgroundResource(R.drawable.note_selected_boundary)
-            else
-                noteCard.setBackgroundResource(android.R.color.transparent)
-
         }
 
 
         /**============================================================== ON CLICK =========================================================**/
         private fun handleOnClick() {
             noteCard.setOnClickListener {
-                cardOnClickInterface.cardOnClick(adapterPosition)
+//                cardOnClickInterface.cardOnClick(adapterPosition)
             }
         }
 
