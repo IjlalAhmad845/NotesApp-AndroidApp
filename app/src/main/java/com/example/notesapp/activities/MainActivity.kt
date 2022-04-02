@@ -3,6 +3,7 @@ package com.example.notesapp.activities
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
@@ -49,6 +50,12 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
         }
 
         binding.layoutControlBtn.setOnClickListener {
+            //saving inverse state
+            Preferences.saveLayoutState(
+                this,
+                !Preferences.getLayoutState(this)
+            )
+
             switchLayout()
         }
     }
@@ -61,12 +68,18 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
         binding.homeRv.adapter = adapter
 
         //PLACEHOLDER VIEW VISIBILITY CONTROL AFTER FETCHING NOTES COUNT FROM DATABASE
-        //BECAUSE IT TAKES TIME
-        lifecycleScope.launch(Dispatchers.IO) {
-            val notesCount = NotesDB.getDatabase(this@MainActivity).EntityDao().getNotes().size
-            //placeholder view
-            binding.homePlaceholder.visibility = if (notesCount == 0) View.VISIBLE else View.GONE
-        }
+        //BECAUSE IT TAKES TIME, but called only once when app starts
+        if (homeViewModel.displayNotesList.size == 0)
+            lifecycleScope.launch(Dispatchers.IO) {
+                val notesCount = NotesDB.getDatabase(this@MainActivity).EntityDao().getNotes().size
+                //placeholder view
+                binding.homePlaceholder.visibility =
+                    if (notesCount == 0) View.VISIBLE else View.GONE
+            }
+
+        //placeholder view visibility control after app starts
+        binding.homePlaceholder.visibility =
+            if (homeViewModel.displayNotesList.size == 0) View.VISIBLE else View.GONE
 
         //setting text in placeholder view on start
         binding.homePlaceholderTextView.text =
@@ -94,12 +107,6 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
     private fun switchLayout() {
         //getting layout state
         val isLinearLayout = Preferences.getLayoutState(this)
-
-        //saving inverse state
-        Preferences.saveLayoutState(
-            this,
-            !isLinearLayout
-        )
 
         //setting icon
         binding.layoutControlBtn.setImageResource(

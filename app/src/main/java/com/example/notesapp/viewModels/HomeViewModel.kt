@@ -49,8 +49,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 _notesList.add(Notes(note.title, note.body, false, note.color))
             }
             //adding to archives list
-            for (note in archivesList) {
-                _archivesList.add(Notes(note.title, note.body, false, note.color))
+            for (archive in archivesList) {
+                _archivesList.add(Notes(archive.title, archive.body, false, archive.color))
             }
 
             //setting notes to display list
