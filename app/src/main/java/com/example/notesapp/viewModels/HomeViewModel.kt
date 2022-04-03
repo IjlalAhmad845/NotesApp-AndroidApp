@@ -61,7 +61,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     /**=================================== FUNCTION FOR ADDING NOTES TO DISPLAYED LIST =======================================**/
     fun addDisplayNote(note: Notes) {
-        _displayNotesList.add(note)
+        _displayNotesList.add(0,note)
     }
 
     /**============================ FUNCTION FOR ADDING NOTES TO DISPLAYED LIST AT INDEX ===================================**/

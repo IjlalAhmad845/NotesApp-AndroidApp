@@ -254,7 +254,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
     /**=================================== METHOD FOR ADDING NEW NOTE TO DISPLAY LIST =====================================**/
     private fun addNewNote(noteTitle: String, noteBody: String) {
         homeViewModel.addDisplayNote(Notes(noteTitle, noteBody, false, 0))
-        adapter.notifyItemInserted(homeViewModel.displayNotesList.size)
+        adapter.notifyItemInserted(0)
     }
 
     /**========================================= METHOD FOR EDIT  NOTE OF DISPLAY LIST ========================================**/
@@ -301,7 +301,7 @@ class MainActivity : AppCompatActivity(), HomeRecyclerAdapter.CardOnClickInterfa
         )
             .setAction("UNDO") {
                 homeViewModel.addDisplayNote(note)
-                adapter.notifyItemInserted(homeViewModel.displayNotesList.size)
+                adapter.notifyItemInserted(0)
 
                 //removing notes from opposite end
                 if (isNoteSection)
